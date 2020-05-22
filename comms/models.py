@@ -10,7 +10,7 @@ class CommsGroup(models.Model):
         regex='^[A-Z0-9a-z ]*$', message="Please use alphanumeric only",
         code="invalid event in group_name")])
     group_purpose = models.TextField(max_length=150, validators=[validators.RegexValidator(
-        regex='^[A-Z0-9a-z, ]*$', message="Please use alphanumeric only",
+        regex='^[A-Z0-9a-z, \r\n]*$', message="Please use alphanumeric only",
         code="invalid event in group_purpose")])
     group_membership = models.ManyToManyField('people.Person', blank=True)
     slug = models.SlugField(unique=True, editable=False, max_length=group_name.max_length, default=None)

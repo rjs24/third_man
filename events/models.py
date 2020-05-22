@@ -28,7 +28,7 @@ class Event(models.Model):
     invites = models.ManyToManyField('comms.CommsGroup')
     recurring = models.BooleanField(default=False)
     description = models.TextField(max_length=150, default='', validators=[validators.RegexValidator(
-            regex='^[a-zA-Z0-9 .,]*$', message="Only use alphanumerics please", code="invalid event description")])
+            regex='^[a-zA-Z0-9 .,\r\n]*$', message="Only use alphanumerics please", code="invalid event description")])
     website_publish = models.BooleanField(default=False)
     recurrence_interval = models.PositiveSmallIntegerField(choices=RECURRENCE_INTERVAL, default=WEEKLY)
     slug = models.SlugField(unique=True, editable=False, max_length=title.max_length, default=None)

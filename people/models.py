@@ -74,12 +74,12 @@ class Person(models.Model):
         regex='^[A-Z0-9]*$', message="Postcode can only be alphanumeric upper-case",
         code="invalid event in postcode")])
     address = models.TextField(max_length=150, validators=[validators.RegexValidator(
-        regex='^[A-Z0-9a-z, ]*$', message="Please use alphanumeric only",
+        regex='^[A-Z0-9a-z, \r\n]*$', message="Please use alphanumeric only",
         code="invalid event in address")])
     organisation_role = models.ForeignKey(Role, on_delete=models.CASCADE)
     allowed_access = models.PositiveSmallIntegerField(choices=ACCESS_LEVEL, default=PRIVATE)
     notes = models.TextField(max_length=500, validators=[validators.RegexValidator(
-        regex='^[A-Z0-9a-z, .]*$', message="Please use alphanumeric only",
+        regex='^[A-Z0-9a-z, .\r\n]*$', message="Please use alphanumeric only",
         code="invalid event in notes")])
     line_manage = models.ForeignKey(Role, default="None", related_name='manages_table', on_delete=models.CASCADE)
     slug = models.SlugField(unique=True, editable=False, max_length=50, default=None)
