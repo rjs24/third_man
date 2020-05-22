@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block content %}
+<br>
+<div class="row justify-content-center">
+    <div class="col-auto">
+        <a href="/event/create/" class="btn btn-primary" action="{% url 'get-form' %}">Create Event</a>
+        <br>
+        <br>
+        {% csrf_token %}
+        <table class="table table-bordered table-hover">
+            <thead class="thead-light">
+                <tr>
+                    <th>Event Title</th>
+                    <th>Event Owner</th>
+                    <th>Event description</th>
+                    <th>start time</th>
+                    <th>end time</th>
+                    <th>Recurring</th>
+                    <th>Recurring frequency</th></h>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in queryset %}
+                <tr>
+                    <td>
+                        <a href="/event/edit/{{row.slug}}">{{row.title}}</a>
+                    </td>
+                    <td>
+                        {{row.event_owner}}
+                    </td>
+                    <td>
+                        {{row.description}}
+                    </td>
+                    <td>
+                        {{row.start}}
+                    </td>
+                    <td>
+                        {{row.end}}
+                    </td>
+                    <td>
+                        {{row.recurring}}
+                    </td>
+                    <td>
+                        {% if row.recurring == True %}
+                        {% if row.recurrence_interval == 1 %}
+                            Daily
+                        {% elif row.recurrence_interval == 2 %}
+                            Weekly
+                        {% elif row.recurrence_interval == 3 %}
+                            Monthly
+                        {% elif row.recurrence_interval == 4 %}
+                            Yearly
+                        {% else %}
+                            None
+                        {% endif %}
+                        {% else %}
+                            None
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+
+{% endblock %}
