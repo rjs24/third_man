@@ -13,7 +13,7 @@ from django import shortcuts
 from .forms import EventForm
 from django.utils.safestring import mark_safe
 from .calendar_tool import Event_Calendar
-import datetime
+from datetime import datetime
 
 
 class APIEventViewSet(ModelViewSet):

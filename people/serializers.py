@@ -18,13 +18,13 @@ class RoleSerializer(serializers.ModelSerializer):
 
 class PersonSerializer(serializers.ModelSerializer):
 
-    userid = serializers.RelatedField(source='person', read_only=True)
+    userid = serializers.RelatedField(source='user', read_only=True)
     organisation_role = serializers.RelatedField(source='role', read_only=True)
     line_manage = serializers.RelatedField(source='role', read_only=True)
 
     class Meta:
         model = Person
-        fields = ['userid', 'email', 'phone_number', 'first_name', 'second_name', 'data_of_birth', 'postcode', 'address',
+        fields = ['userid', 'email', 'phone_number', 'first_name', 'second_name', 'date_of_birth', 'postcode', 'address',
                   'organisation_role', 'allowed_access', 'notes', 'line_manage']
 
 

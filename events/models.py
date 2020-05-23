@@ -19,7 +19,7 @@ class Event(models.Model):
         (YEARLY, ('Set event to yearly recurrence')),
     )
 
-    event_owner = models.ForeignKey('people.Person', on_delete=models.CASCADE, related_name='event_owners_set')
+    event_owner = models.ForeignKey('people.Person', on_delete=models.CASCADE, related_name='event_owners_set', null=True)
     title = models.CharField(max_length=80, null=False, blank=False, primary_key=True, validators=[validators.RegexValidator(
             regex='^[a-zA-Z0-9 ]*$', message="Event title must be alphanumeric", code="invalid event title")])
     start = models.DateTimeField(default=django.utils.timezone.now)
