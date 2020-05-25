@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load rest_framework %}
+
+{% block content %}
+<br>
+<div class="row justify-content-center">
+    <div class="col-auto">
+        <form method="POST" class="form-group" action="{% url 'roles-list' %}">{% csrf_token %}
+            <div class="form-group">
+                {{form|crispy}}
+                <button type="submit" class="btn btn-success">Create Role</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

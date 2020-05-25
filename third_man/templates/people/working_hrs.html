@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+<br>
+<div class="row justify-content-left">
+    <div class="col-auto"></div>
+    <div class="col-auto">
+        <a href="/people/working_hrs/create/" class="btn btn-primary" action="{% url 'get-workinghrsform' %}">Create working hours</a>
+        <br>
+        <br>
+        {% csrf_token %}
+        <table class="table table-bordered table-hover">
+            <thead class="thead-light">
+                <tr>
+                    <th>Shift Name</th>
+                    <th>Day of the Week</th>
+                    <th>Start time</th>
+                    <th>End time</th>
+                    <th>Duration</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in queryset %}
+                <tr>
+                    <td>
+                        <a href="/people/working_hrs/{{row.slug}}">{{row.shift_name}}</a>
+                    </td>
+                    <td>
+                        {{row.day_of_week}}
+                    </td>
+                    <td>
+                        {{row.start}}
+                    </td>
+                    <td>
+                        {{row.end}}
+                    </td>
+                    <td>
+                        {{row.duration}}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from .models import Role, Person, Working_Hrs, Staff, Volunteer
+from rest_framework_recursive.fields import RecursiveField
+
 
 class UserSerializer(serializers.ModelSerializer):
 
@@ -10,17 +12,22 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class RoleSerializer(serializers.ModelSerializer):
-    associated_groups = serializers.RelatedField(source='commsgroup', read_only=True)
+
+    responsible_4_roles = serializers.ListField(child=RecursiveField())
     class Meta:
         model = Role
-        fields = ['role_name', 'role_responsibility', 'assoicated_groups', 'responsible_4_roles']
+        fields = ['role_name', 'role_responsibility', 'responsible_4_roles']
 
 
 class PersonSerializer(serializers.ModelSerializer):
 
-    userid = serializers.RelatedField(source='user', read_only=True)
-    organisation_role = serializers.RelatedField(source='role', read_only=True)
-    line_manage = serializers.RelatedField(source='role', read_only=True)
+    userid = UserSerializer(many=False, read_only=True)
+    organisation_role = RoleSerializer(many=False, read_only=True)
+    line_manage = RoleSerializer(many=False, read_only=True)
+
+    # userid = serializers.RelatedField(source='user', read_only=True)
+    # organisation_role = serializers.RelatedField(source='role', read_only=True)
+    # line_manage = serializers.RelatedField(source='role', read_only=True)
 
     class Meta:
         model = Person

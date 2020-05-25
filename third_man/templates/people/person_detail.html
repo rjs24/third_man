@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load rest_framework %}
+
+{% block content %}
+<br>
+<div class="row justify-content-center">
+    <div class="col-auto">
+        <form method="POST" class="form-group" action="{% url 'event-list' %}">{% csrf_token %}
+            <div class="form-group">
+                <form method="POST" class="form-group">
+                    <div class="form-row">
+                            <div class="form-group col-md-6 mb-0">
+                                {{ form.first_name|as_crispy_field }}
+                            </div>
+                            <div class="form-group col-md-6 mb-0">
+                                {{ form.second_name|as_crispy_field }}
+                            </div>
+                            <div class="form-group col-md-6 mb-0">
+                                {{ form.email|as_crispy_field }}
+                            </div>
+                            <div class="form-group col-md-6 mb-0">
+                                {{ form.phone_number|as_crispy_field }}
+                            </div>
+                            <div class="form-group col-md-6 mb-0">
+                                {{ form.address|as_crispy_field }}
+                            </div>
+                            <div class="form-group col-md-6 mb-0">
+                                {{ form.postcode|as_crispy_field }}
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6 mb-0">
+                                {{ form.organisation_role|as_crispy_field }}
+                                {{ form.allowed_access|as_crispy_field }}
+                            </div>
+                            <div class="form-group col-md-6 mb-0">
+                                {{ form.notes|as_crispy_field }}
+                                {{ form.line_manage|as_crispy_field }}
+                            </div>
+                        </div>
+                    <button type="submit" class="save btn btn-success" name="action" value="save" formmethod="post" formaction="{% url 'person-detail' slug=slug %}">Save</button>
+                <button type="submit" class="save btn btn-danger" name="action" value="get_delete" formmethod="get" formaction="{% url 'person-deleteconf' slug=slug %}">Delete</button>
+                <button type="submit" class="save btn btn-info" name="action" value="Back" formmethod="get" formaction="{% url 'person-list' %}">Back</button>
+                </form>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

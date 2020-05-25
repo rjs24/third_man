@@ -7,7 +7,7 @@
 <div class="row justify-content-center">
     <div class="col-auto">
         <div class="form-group">
-            <form method="POSTT" class="form-group">
+            <form method="POST" class="form-group">
                 {% csrf_token %}
             {{form|crispy}}
                 <button type="submit" class="save btn btn-success" name="action" value="save" formmethod="post" formaction="{% url 'comms-detail' slug=slug %}">Save</button>

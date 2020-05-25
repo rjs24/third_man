@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+<br>
+<div class="row justify-content-center">
+    <div class="col-auto">
+        <a href="/event/create/" class="btn btn-primary" action="{% url 'get-personform' %}">Create Person</a>
+        <br>
+        <br>
+        {% csrf_token %}
+        <table class="table table-bordered table-hover">
+            <thead class="thead-light">
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone number</th>
+                    <th>Address</th>
+                    <th>Postcode</th>
+                    <th>Organisation role</th>
+                    <th>Line Manager</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in queryset %}
+                <tr>
+                    <td>
+                        <a href="/people/person/edit/{{row.slug}}">{{row.first_name}} {{row.second_name}}</a>
+                    </td>
+                    <td>
+                        {{row.email}}
+                    </td>
+                    <td>
+                        {{row.phone_number}}
+                    </td>
+                    <td>
+                        {{row.address}}
+                    </td>
+                    <td>
+                        {{row.postcode}}
+                    </td>
+                    <td>
+                        {{row.organisation_role}}
+                    </td>
+                    <td>
+                        {{row.line_manage}}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+
+{% endblock %}

@@ -25,5 +25,5 @@ urlpatterns = [
     url(r'^event/delete/(?P<slug>[-\w\d]+)/$', event_delete, name='event-delete'),
     url(r'^event/delete_confirm/(?P<slug>[-\w\d]+)/$', EventDeleteConfirmView.as_view(), name='event-deleteconf'),
     url(r'^event/create/$', EventsFormView.as_view(), name="get-form"),
-    url(r'calendar/', CalendarView.as_view(), name='events_calendar.html')
+    url(r'calendar/', CalendarView.as_view(), name='events_calendar.html'),
 ]

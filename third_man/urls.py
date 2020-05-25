@@ -23,5 +23,6 @@ urlpatterns = [
     path('', include('events.urls')),
     path('', include('comms.urls')),
     path('', include('finance.urls')),
-    path('', include('people.urls'))
+    path('', include('people.urls')),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]

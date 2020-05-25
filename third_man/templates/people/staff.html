@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+<br>
+<div class="row justify-content-left">
+    <div class="col-auto"></div>
+    <div class="col-auto">
+        <a href="/people/staff/create/" class="btn btn-primary" action="{% url 'get-stafform' %}">Create Staff</a>
+        <br>
+        <br>
+        {% csrf_token %}
+        <table class="table table-bordered table-hover">
+            <thead class="thead-light">
+                <tr>
+                    <th>Person</th>
+                    <th>Staff number</th>
+                    <th>Hours</th>
+                    <th>National Insurance Number</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in queryset %}
+                <tr>
+                    <td>
+                        <a href="/people/staff/edit/{{row.slug}}">{{row.person}}</a>
+                    </td>
+                    <td>
+                        {{row.staff_number}}
+                    </td>
+                    <td>
+                        {{row.hours}}
+                    </td>
+                    <td>
+                        {{row.nat_insurance_num}}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

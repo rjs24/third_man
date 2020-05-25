@@ -9,52 +9,63 @@
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/custom.css' %}">
   <link rel="stylesheet" type="text/css" href="{% static 'css/calend_styles.css' %}">
-  <title>Django Calendar App</title>
+  <title>Third Man app</title>
 </head>
 <body>
 <nav class="site-header sticky-top py-1 navbar-expand-sm navbar-dark bg-dark">
       <div class="container d-flex flex-column flex-md-row justify-content-between">
-        <a class="py-2" href="#">
+        <a class="py-2" href="/">
+          {{ user }}
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="d-block mx-auto"><circle cx="12" cy="12" r="10"></circle><line x1="14.31" y1="8" x2="20.05" y2="17.94"></line><line x1="9.69" y1="8" x2="21.17" y2="8"></line><line x1="7.38" y1="12" x2="13.12" y2="2.06"></line><line x1="9.69" y1="16" x2="3.95" y2="6.06"></line><line x1="14.31" y1="16" x2="2.83" y2="16"></line><line x1="16.62" y1="12" x2="10.88" y2="21.94"></line></svg>
         </a>
         <ul class="nav-item">
-          <a class="nav-link d-none d-md-inline-block" href="#">Tour</a>
+          <a class="py-2 d-none d-md-inline-block" href="/comms/" id="comms">Communications</a>
         </ul>
         <ul class="nav-item">
-          <a class="py-2 d-none d-md-inline-block" href="#">Product</a>
+          <a class="py-2 d-none d-md-inline-block" href="/events/" id="events">Events</a>
         </ul>
-        <a class="py-2 d-none d-md-inline-block" href="#">Features</a>
-        <a class="py-2 d-none d-md-inline-block" href="#">Enterprise</a>
-        <a class="py-2 d-none d-md-inline-block" href="#">Support</a>
-        <a class="py-2 d-none d-md-inline-block" href="#">Pricing</a>
-        <a class="py-2 d-none d-md-inline-block" href="#">Cart</a>
+        <a class="py-2 d-none d-md-inline-block dropdown-toggle" data-toggle="dropdown" aria-expanded="false" id="people">People</a>
+        <div class="dropdown-menu hide" aria-labelledby="dropdown10">
+          <a class="dropdown-item" href="/people/roles/">Roles</a>
+          <a class="dropdown-item" href="/people/person/">People</a>
+          <a class="dropdown-item" href="/people/staff/">Staff</a>
+          <a class="dropdown-item" href="/people/volunteer/">Volunteer</a>
+          <a class="dropdown-item" href="/people/working_hrs/">Working Hours</a>
+        </div>
+        <a class="py-2 d-none d-md-inline-block" href="/analytics" id="analytics">Analytics</a>
+        <a class="py-2 d-none d-md-inline-block" href="/settings/" id="settings">Settings</a>
+        <a class="py-2 d-none d-md-inline-block" href="/finance/" id="finance">Finance</a>
+        <a class="py-2 d-none d-md-inline-block" href="/media/" id="media">Media</a>
+        <a class="py-2 d-none d-md-inline-block" href="/media/" id="website">website</a>
       </div>
     </nav>
   {% block content %}
   {% endblock %}
 <nav class="navbar fixed-bottom navbar-expand-sm navbar-dark bg-dark">
-      <a class="navbar-brand" href="#">Bottom navbar</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+      <a class="navbar-brand" href="#">About Third Man</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse.hide" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarCollapse">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
-            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+            <a class="nav-link" href="#">About $THIS charity</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Link</a>
+            <a class="nav-link" href="#">$CHARITY values</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link disabled" href="#">Disabled</a>
+            <a class="nav-link" href="#">Donate</a>
           </li>
           <li class="nav-item dropup show">
-            <a class="nav-link dropdown-toggle" href="https://getbootstrap.com/" id="dropdown10" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">Dropup</a>
-            <div class="dropdown-menu show" aria-labelledby="dropdown10">
-              <a class="dropdown-item" href="#">Action</a>
-              <a class="dropdown-item" href="#">Another action</a>
-              <a class="dropdown-item" href="#">Something else here</a>
+            <a class="nav-link dropdown-toggle" href="https://getbootstrap.com/" id="navbarDropdown" data-toggle="dropdown"
+               data-target=".navbar-collapse.hide" aria-expanded="false">Other Links</a>
+            <div class="dropdown-menu hide" aria-labelledby="dropdown10">
+              <a class="dropdown-item" href="#">Help</a>
+              <a class="dropdown-item" href="#">Tutorials</a>
+              <a class="dropdown-item" href="#">Contact the third man!</a>
             </div>
           </li>
         </ul>

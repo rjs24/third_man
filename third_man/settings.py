@@ -12,14 +12,13 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 import os
 from .local_settings import *
 SETTINGS_PATH = os.path.dirname((os.path.dirname(__file__)))
-#STATIC_ROOT = os.path.join(SETTINGS_PATH, 'static')
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static')
-]
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+STATIC_ROOT = BASE_DIR
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 SITE_URL = "127.0.0.1:8000"
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/

@@ -63,10 +63,11 @@ class CommsGroupViewSet(ModelViewSet):
     def list(self, request):
         queryset = CommsGroup.objects.all().order_by('pk')
         serializer = CommsGroupSerializer(queryset, many=True)
-        return Response({'queryset': queryset, 'serializer': serializer.data}, template_name='comms/comms_group.html')
+        return Response({'queryset': queryset, 'serializer': serializer}, template_name='comms/comms_group.html')
 
     @method_decorator(login_required)
     def create(self, request):
+        print(request.data)
         serializer = CommsGroupSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()

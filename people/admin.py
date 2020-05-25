@@ -10,11 +10,8 @@ class role_admin_inline(admin.TabularInline):
 class RoleAdmin(admin.ModelAdmin):
 
     model = Role
-    list_display = ('role_name', 'role_responsibility', 'group_names', 'responsible_roles')
+    list_display = ('role_name', 'role_responsibility', 'responsible_roles')
     inline = (role_admin_inline,)
-
-    def group_names(self, obj):
-        return obj.list_group_names()
 
     def responsible_roles(self, obj):
         return obj.get_responsible_roles()

@@ -14,7 +14,6 @@ class Role(models.Model):
     role_responsibility = models.TextField(max_length=500, validators=[validators.RegexValidator(
         regex='^[A-Z0-9a-z, .]*$', message="Please use alphanumeric only",
         code="invalid event in role_responsibility")])
-    associated_groups = models.ManyToManyField('comms.CommsGroup', blank=True, default=None)
     responsible_4_roles = models.ManyToManyField("self", blank=True, default=None, related_name='responsible_roles',
                                                  symmetrical=False)
     slug = models.SlugField(unique=True, editable=False, max_length=role_name.max_length, default=None)
@@ -25,13 +24,6 @@ class Role(models.Model):
 
     def __str__(self):
         return '{}'.format(self.role_name)
-
-    def list_group_names(self):
-        """Return a list of commsGroup names"""
-        ret_grp = ''
-        for grps in self.associated_groups.all():
-            ret_grp += '<ul> {} </ul> '.format(grps)
-        return format_html(ret_grp)
 
     def get_responsible_roles(self):
         """return a list of roles"""
@@ -117,14 +109,17 @@ class Working_Hrs(models.Model):
         (6, ("Saturday")),
         (7, ("Sunday"))
     ]
-
+    shift_name = models.CharField(max_length=80, null=False, blank=False, default="first shift",
+                                  primary_key=True, validators=[validators.RegexValidator(
+            regex='^[a-zA-Z0-9 ]*$', message="Shift name must be alphanumeric", code="invalid shift name")])
     day_of_week = models.PositiveSmallIntegerField(choices=DAYS, default=1)
     start = models.TimeField(default=django.utils.timezone.now)
     end = models.TimeField(default=django.utils.timezone.now)
     duration = models.DurationField(default=timedelta())
+    slug = models.SlugField(unique=True, editable=False, max_length=shift_name.max_length, default=None)
 
     def __str__(self):
-        return '{}: {} -> {}'.format(self.day_of_week, self.start, self.end)
+        return '{}({}: {} -> {})'.format(self.shift_name, self.day_of_week, self.start, self.end)
 
     class Meta:
         ordering = ['start']

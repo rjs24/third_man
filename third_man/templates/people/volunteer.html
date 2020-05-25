@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+<br>
+<div class="row justify-content-left">
+    <div class="col-auto"></div>
+    <div class="col-auto">
+        <a href="/comms/create/" class="btn btn-primary" action="{% url 'get-volunteerform' %}">Create Volunteer</a>
+        <br>
+        <br>
+        {% csrf_token %}
+        <table class="table table-bordered table-hover">
+            <thead class="thead-light">
+                <tr>
+                    <th>Person</th>
+                    <th>Staff number</th>
+                    <th>Hours</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in queryset %}
+                <tr>
+                    <td>
+                        <a href="/people/volunteer/edit/{{row.slug}}">{{row.person}}</a>
+                    </td>
+                    <td>
+                        {{row.staff_number}}
+                    </td>
+                    <td>
+                        {{row.hours}}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}
