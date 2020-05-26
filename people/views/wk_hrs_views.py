@@ -83,7 +83,7 @@ class Working_HrsViewSet(ModelViewSet):
         serializer = Working_HrsSerializer(item)
         form = WorkingHoursForm(instance=item)
         return Response({'form': form, 'serializer': serializer, 'slug':slug, 'queryset':queryset},
-                        template_name='people/working_hrs_detail.html')
+                        template_name='people/working_hrs_form_detail.html')
 
     @method_decorator(login_required)
     def update(self, request, slug):

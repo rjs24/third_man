@@ -59,7 +59,7 @@ class PersonViewSet(ModelViewSet):
     serializer_class = PersonSerializer
     permission_classes = [IsAuthenticated]
     renderer_classes = [TemplateHTMLRenderer]
-    template_name = 'people/person.html'
+    template_name = 'people/persons.html'
 
     @method_decorator(login_required)
     def list(self, request):

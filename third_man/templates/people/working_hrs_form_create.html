@@ -9,7 +9,7 @@
         <form method="POST" class="form-group" action="{% url 'workinghrs-list' %}">{% csrf_token %}
             <div class="form-group">
                 {{form|crispy}}
-                <button type="submit" class="btn btn-success">Create Group</button>
+                <button type="submit" class="btn btn-success">Create Hours</button>
             </div>
         </form>
     </div>

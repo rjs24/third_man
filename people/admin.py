@@ -30,7 +30,7 @@ class PersonAdmin(admin.ModelAdmin):
 class Working_HrsAdmin(admin.ModelAdmin):
 
     model = Working_Hrs
-    list_display = ('start', 'end', 'duration')
+    list_display = ('shift_name', 'start', 'end', 'duration')
 
 
 class StaffAdmin(admin.ModelAdmin):

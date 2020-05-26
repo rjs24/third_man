@@ -30,4 +30,4 @@ class VolunteerForm(forms.ModelForm):
 class WorkingHoursForm(forms.ModelForm):
     class Meta:
         model = Working_Hrs
-        fields = ['day_of_week', 'start', 'end', 'duration']
+        fields = ['shift_name', 'day_of_week', 'start', 'end', 'duration']

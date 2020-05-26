@@ -27,7 +27,9 @@
                         {{row.role_responsibility}}
                     </td>
                     <td>
-                        {{row.responsible_4_roles}}
+                        {% for rol in row.responsible_4_roles.all %}
+                        {{rol.role_name}}
+                        {% endfor %}
                     </td>
                 </tr>
             {% endfor %}

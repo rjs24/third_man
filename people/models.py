@@ -118,6 +118,10 @@ class Working_Hrs(models.Model):
     duration = models.DurationField(default=timedelta())
     slug = models.SlugField(unique=True, editable=False, max_length=shift_name.max_length, default=None)
 
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.shift_name)
+        super(Working_Hrs, self).save(*args, **kwargs)
+
     def __str__(self):
         return '{}({}: {} -> {})'.format(self.shift_name, self.day_of_week, self.start, self.end)
 

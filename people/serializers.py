@@ -1,7 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from .models import Role, Person, Working_Hrs, Staff, Volunteer
-from rest_framework_recursive.fields import RecursiveField
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -13,26 +12,15 @@ class UserSerializer(serializers.ModelSerializer):
 
 class RoleSerializer(serializers.ModelSerializer):
 
-    responsible_4_roles = serializers.ListField(child=RecursiveField())
     class Meta:
         model = Role
-        fields = ['role_name', 'role_responsibility', 'responsible_4_roles']
+        fields = '__all__'
 
 
 class PersonSerializer(serializers.ModelSerializer):
-
-    userid = UserSerializer(many=False, read_only=True)
-    organisation_role = RoleSerializer(many=False, read_only=True)
-    line_manage = RoleSerializer(many=False, read_only=True)
-
-    # userid = serializers.RelatedField(source='user', read_only=True)
-    # organisation_role = serializers.RelatedField(source='role', read_only=True)
-    # line_manage = serializers.RelatedField(source='role', read_only=True)
-
     class Meta:
         model = Person
-        fields = ['userid', 'email', 'phone_number', 'first_name', 'second_name', 'date_of_birth', 'postcode', 'address',
-                  'organisation_role', 'allowed_access', 'notes', 'line_manage']
+        fields = '__all__'
 
 
 class Working_HrsSerializer(serializers.ModelSerializer):
@@ -44,17 +32,13 @@ class Working_HrsSerializer(serializers.ModelSerializer):
 
 class StaffSerializer(serializers.ModelSerializer):
 
-    person = serializers.RelatedField(source='person', read_only=True)
-    hours = serializers.RelatedField(source='working_hrs', read_only=True)
     class Meta:
         model = Staff
-        fields = ['person', 'staff_number', 'nat_insurance_num', 'salary', 'hours']
+        fields = '__all__'
 
 
 class VolunteerSerializer(serializers.ModelSerializer):
 
-    person = serializers.RelatedField(source='person', read_only=True)
-    hours = serializers.RelatedField(source='working_hrs', read_only=True)
     class Meta:
         model = Volunteer
-        fields = fields = ['person', 'staff_number', 'hours']
+        fields = '__all__'

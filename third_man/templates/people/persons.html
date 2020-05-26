@@ -4,7 +4,7 @@
 <br>
 <div class="row justify-content-center">
     <div class="col-auto">
-        <a href="/event/create/" class="btn btn-primary" action="{% url 'get-personform' %}">Create Person</a>
+        <a href="/people/person/create/" class="btn btn-primary" action="{% url 'get-personform' %}">Create Person</a>
         <br>
         <br>
         {% csrf_token %}
@@ -50,8 +50,4 @@
         </table>
     </div>
 </div>
-
-
-
-
 {% endblock %}
