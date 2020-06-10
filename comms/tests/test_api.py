@@ -16,7 +16,7 @@ class CommsGrpAPITest(TestCase):
         self.user.set_password('password')
         self.user.save()
         self.user_b = User(username='jfrost3')
-        self.user_b.set_password(('12345'))
+        self.user_b.set_password('12345')
         self.user_b.save()
         self.role_a = Role.objects.create(role_name="nearly all_things", role_responsibility="make nearly it all work")
         self.role_a.save()

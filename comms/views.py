@@ -67,7 +67,6 @@ class CommsGroupViewSet(ModelViewSet):
 
     @method_decorator(login_required)
     def create(self, request):
-        print(request.data)
         serializer = CommsGroupSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()

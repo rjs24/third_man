@@ -2,6 +2,7 @@ from django.db import models
 from events.models import Event
 from django.core.validators import RegexValidator
 
+
 class PublicEvent(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     more_info_link = models.URLField(max_length=250)
