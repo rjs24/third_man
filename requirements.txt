@@ -2,7 +2,7 @@ asgiref==3.2.3
 astroid==2.3.3
 coverage==5.0.3
 dj-database-url==0.5.0
-Django==3.0.7
+Django==2.2.13
 django-autofixture==0.12.1
 django-classy-tags==1.0.0
 django-cms==3.7.3
@@ -17,8 +17,17 @@ django-polymorphic==2.1.2
 django-sekizai==1.1.0
 django-treebeard==4.3.1
 djangocms-admin-style==1.5.0
+djangocms-attributes-field==1.2.0
+djangocms-column==1.10.0
+djangocms-file==2.4.0
+djangocms-googlemap==1.4.0
 djangocms-installer==1.2.3
+djangocms-link==2.6.1
+djangocms-picture==2.4.0
+djangocms-snippet==2.3.0
+djangocms-style==2.3.0
 djangocms-text-ckeditor==3.9.1
+djangocms-video==2.3.0
 djangorestframework==3.11.0
 djangorestframework-recursive==0.1.2
 drf-generators==0.5.0

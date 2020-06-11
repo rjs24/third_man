@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     'events',
     'finance',
     'people',
-    'website',
     'analytics',
     'rest_framework',
     'third_man',
@@ -58,7 +57,15 @@ INSTALLED_APPS = [
     'filer',
     'easy_thumbnails',
     'mptt',
-    'djangocms_text_ckeditor'
+    'djangocms_text_ckeditor',
+    'djangocms_link',
+    'djangocms_file',
+    'djangocms_picture',
+    'djangocms_video',
+    'djangocms_googlemap',
+    'djangocms_snippet',
+    'djangocms_style',
+    'djangocms_column'
 ]
 
 MEDIA_URL = "/media/"
@@ -105,7 +112,7 @@ CONTEXT_PROCESSORS = [
 ]
 
 CMS_TEMPLATES = [
-    ('website.frontend_templates.home.html', 'Home page template'),
+    ('frontend_templates/home.html', 'Home page template'),
 ]
 ROOT_URLCONF = 'third_man.urls'
 
