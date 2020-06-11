@@ -25,7 +25,7 @@
                 {% for row in queryset %}
                 <tr>
                     <td>
-                        <a href="/event/edit/{{row.slug}}">{{row.title}}</a>
+                        <a href="/event/{{row.slug}}">{{row.title}}</a>
                     </td>
                     <td>
                         {{row.event_owner}}

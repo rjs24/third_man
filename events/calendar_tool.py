@@ -12,10 +12,11 @@ class Event_Calendar(HTMLCalendar):
         events_per_day = Event.objects.filter(start__day=day)
         d = ''
         for event in events_per_day:
-            d += f'<a href=/events/edit><li> {event.title} </li></a>'
+            cal_string = f'<a href=/event/%s><li>%s</li></a>' % (event.slug, event.title)
+            d += cal_string
 
         if day != 0:
-            return f"<td><span class='date'><a href=/evetns/new_event >{day}</span></a><ul> {d} </ul></td>"
+            return f"<td><span class='date'><a href=/event/create/>{day}</span></a><ul> {d} </ul></td>"
         return '<td></td>'
 
     def formatweek(self, theweek, events):
