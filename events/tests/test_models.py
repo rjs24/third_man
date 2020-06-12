@@ -30,8 +30,7 @@ class EventTest(TestCase):
                                         allowed_access=1, notes="likes rice", line_manage=self.top_role)
         self.rogue_employee.save()
 
-        self.comms_grp = CommsGroup.objects.create(group_owner=self.person_a, group_name="fete group",
-                                                   group_purpose="support summer fete")
+        self.comms_grp = CommsGroup.objects.create(group_name="fete group", group_purpose="support summer fete")
         self.comms_grp.save()
 
 
@@ -60,6 +59,7 @@ class EventTest(TestCase):
         self.assertEqual(self.event_a.title, "summer fete")
         self.assertTrue(self.event_a.end, datetime)
         self.assertTrue(self.event_a.duration, timedelta)
+
 
     def test_event_recurence(self):
         """test if recurring=True auto creates other events from start date"""

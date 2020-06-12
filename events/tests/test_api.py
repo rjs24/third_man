@@ -24,64 +24,44 @@ class EventAPITest(TestCase):
                                         postcode="S1 9AA", address= "29, Acacia Road, Nuttytown", organisation_role=self.role,
                                         allowed_access=3, notes="likes pizza", line_manage=self.top_role)
         self.person_a.save()
-        self.comms_grp = CommsGroup.objects.create(group_name="fete group", group_purpose="support summer fete",
-                                                   group_owner=self.person_a)
+        self.comms_grp = CommsGroup.objects.create(group_name="fete group", group_purpose="support summer fete")
         self.comms_grp.save()
-        self.event_a = Event.objects.create(title="summer fete",
-                                            start=datetime.strptime("2020-07-03 12:00", "%Y-%m-%d %H:%M"),
-                                            end=datetime.strptime("2020-07-03 16:00", "%Y-%m-%d %H:%M"),
-                                            event_owner=self.person_a,
-                                            duration=timedelta(hours=4),
-                                            recurring=False, description="happy summer fete", website_publish=True)
-        self.event_a.save()
-        self.event_a.invites.add(self.comms_grp)
-        self.event_a.save()
 
     def test_get_Events(self):
         """Test api to list events"""
         client = APIClient()
-        client.login(username='emorse2', password='password')
-        resp = client.get('/api/event')
+        resp = client.put('/api/event')
         self.assertEqual(resp.status_code, 200)
         events = Event.objects.all()
-        for event in events:
-            self.assertEqual(event.title, resp.json()[0]['title'])
+        self.assertEqual(json.loads(resp.content), json.loads(events))
 
     def test_newEvent(self):
         """Test api to create new event"""
         client = APIClient()
-        client.login(username='emorse2', password='password')
         resp = client.post('/api/event',
-            {"event_owner": self.person_a.id, "title": "PCC",
-            "start": datetime.strptime("2020-06-24 19:00", "%Y-%m-%d %H:%M"),
-            "end": datetime.strptime("1985-06-21 21:00", "%Y-%m-%d %H:%M"), "duration": timedelta(hours=2),
-            "invites": [self.comms_grp.group_name], "recurring": False, "description": "PCC meeting",
-            "website_publish": False}, format='json')
-        self.assertEqual(resp.status_code, 201)
+            {"event_owner": '{}', "title": "PCC", "start": datetime.strptime("2020-06-24 19:00", "%Y-%m-%d %H:%M"),
+              "end":datetime.strptime("1985-06-21 21:00", "%Y-%m-%d %H:%M"), "duration": timedelta(hours=2),
+            "invites": self.comms_grp, "recurring": False, "description": "PCC meeting",
+        "website_publish": False}, format='json')
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(json.loads(resp.content), json.loads('{ "event status": "event created", "title": "PCC", '
+                                                   '"start": {}, "user", {} }'.format(
+            datetime.strptime("2020-06-24 19:00", "%Y-%m-%d %H:%M"), self.user)))
 
     def test_editEvent(self):
         """Test api to edit an event"""
         client = APIClient()
-        client.login(username='emorse2', password='password')
-        resp = client.put('/api/event/summer-fete',
-            data={"event_owner": self.person_a.id, "title": "summer fete",
-            "start": datetime.strptime("2020-07-03 12:00", "%Y-%m-%d %H:%M"),
-            "end": datetime.strptime("2020-07-03 16:00", "%Y-%m-%d %H:%M"), "duration": timedelta(hours=4),
-            "invites": [self.comms_grp.group_name], "recurring": False, "description": "the main money raiser",
-            "website_publish": False}, format='json')
+        resp = client.put('/api/event',
+            { "search": {"title": "PCC meeting"}, "start": datetime.strptime("2020-06-24 20:00", "%Y-%m-%d %H:%M"),
+            "end": datetime.strptime("1985-06-21 22:00", "%Y-%m-%d %H:%M")}, format='json')
         self.assertEqual(resp.status_code, 200)
-        query = Event.objects.get(title="summer fete")
-        self.assertEqual(query.description, "the main money raiser")
+        self.assertEqual(json.loads(resp.content), json.loads('{ "event status": "event edit complete", "event_title": title,'
+                                                   '"user", userid }'))
 
     def test_deleteEvent(self):
         """Test api to delete an event"""
         client = APIClient()
-        client.login(username='emorse2', password='password')
-        query1 = Event.objects.all()
-        self.assertEqual(query1.count(), 1)
-        resp = client.delete('/api/event/summer-fete', format='json')
-        self.assertEqual(resp.status_code, 204)
-        query2 = Event.objects.all()
-        self.assertEqual(query2.count(), 0)
-
-
+        resp = client.put('/api/event',
+            { "search": {"title": "PCC meeting"}}, format='json')
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(json.loads(resp.content), json.loads('{ "event status": "event delete complete"}'))

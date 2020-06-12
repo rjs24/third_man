@@ -28,11 +28,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 
 INSTALLED_APPS = [
-    'djangocms_admin_style',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -50,41 +48,10 @@ INSTALLED_APPS = [
     'crispy_forms',
     'django_jenkins',
     'django.contrib.sites',
-    'cms',
-    'menus',
-    'treebeard',
-    'sekizai',
-    'filer',
-    'easy_thumbnails',
-    'mptt',
-    'djangocms_text_ckeditor',
-    'djangocms_link',
-    'djangocms_file',
-    'djangocms_picture',
-    'djangocms_video',
-    'djangocms_googlemap',
-    'djangocms_snippet',
-    'djangocms_style',
-    'djangocms_column'
 ]
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
-
-THUMBNAIL_HIGH_RESOLUTION = True
-
-THUMBNAIL_PROCESSORS = (
-    'easy_thumbnails.processors.colorspace',
-    'easy_thumbnails.processors.autocrop',
-    'filer.thumbnail_processors.scale_and_crop_with_subject_location',
-    'easy_thumbnails.processors.filters'
-)
-
-SITE_ID = 1
-
-LANGUAGES = [
-    ('en-uk', 'English')
-]
 
 JENKINS_TASKS = (
     'django_jenkins.tasks.run_pep8',
@@ -100,20 +67,9 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    #'django.middleware.clickjacking.XFrameOptionsMiddleware', #needs to be uncommented for production
-    'cms.middleware.user.CurrentUserMiddleware',
-    'cms.middleware.page.CurrentPageMiddleware',
-    'cms.middleware.toolbar.ToolbarMiddleware',
-    'cms.middleware.language.LanguageCookieMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware'
 ]
 
-CONTEXT_PROCESSORS = [
-    'cms.context_processors.cms_settings'
-]
-
-CMS_TEMPLATES = [
-    ('frontend_templates/home.html', 'Home page template'),
-]
 ROOT_URLCONF = 'third_man.urls'
 
 REST_FRAMEWORK = {
@@ -134,8 +90,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'sekizai.context_processors.sekizai',
-                'cms.context_processors.cms_settings',
             ],
         },
     },

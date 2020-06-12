@@ -7,10 +7,3 @@ class HomePageView(TemplateView):
 
     def home_page_render(self, request):
         return render(request, {'user': request.user.username})
-
-
-class ExternalHomePageView(TemplateView):
-    template_name = 'website_templates/home.html'
-
-    def external_page_render(self, request):
-        return render(request, {'user': request.user.username })

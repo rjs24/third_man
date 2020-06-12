@@ -71,6 +71,7 @@ class EventViewSet(ModelViewSet):
 
     @method_decorator(login_required)
     def create(self, request):
+        print(request.data)
         serializer = EventSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
