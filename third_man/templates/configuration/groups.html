@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+<br>
+<div class="row justify-content-left">
+    <div class="col-auto"></div>
+    <div class="col-auto">
+        <a href="/groups/create/" class="btn btn-primary" action="{% url 'get-groupform' %}">Create Group</a>
+        <br>
+        <br>
+        {% csrf_token %}
+        <table class="table table-bordered table-hover">
+            <thead class="thead-light">
+                <tr>
+                    <th>Group</th>
+                    <th>Group owner</th>
+                    <th>Group purpose</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in queryset %}
+                <tr>
+                    <td>
+                        <a href="/groups/edit/{{row.id}}/">{{row.name}}</a>
+                    </td>
+                    <td>
+                        {{row.group_owner}}
+                    </td>
+                    <td>
+                        {{row.group_purpose}}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

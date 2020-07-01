@@ -46,8 +46,7 @@ INSTALLED_APPS = [
     'third_man',
     'drf_generators',
     'crispy_forms',
-    'django_jenkins',
-    'django.contrib.sites',
+    'django_jenkins'
 ]
 
 MEDIA_URL = "/media/"

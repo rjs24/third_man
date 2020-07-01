@@ -27,6 +27,6 @@ urlpatterns = [
     path('', include('finance.urls')),
     path('', include('people.urls')),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    #path('', include('configuration.urls')),
-    path('accounts/', include('django.contrib.auth.urls'))
+    path('', include('django.contrib.auth.urls')),
+    path('', include('configuration.urls'))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
