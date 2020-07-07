@@ -12,9 +12,8 @@
         <table class="table table-bordered table-hover">
             <thead class="thead-light">
                 <tr>
-                    <th>Group</th>
-                    <th>Group owner</th>
-                    <th>Group purpose</th>
+                    <th>Group name</th>
+                    <th>Group permissions</th>
                 </tr>
             </thead>
             <tbody>
@@ -24,10 +23,7 @@
                         <a href="/groups/edit/{{row.id}}/">{{row.name}}</a>
                     </td>
                     <td>
-                        {{row.group_owner}}
-                    </td>
-                    <td>
-                        {{row.group_purpose}}
+                        {{row.id_permissions_to}}
                     </td>
                 </tr>
             {% endfor %}

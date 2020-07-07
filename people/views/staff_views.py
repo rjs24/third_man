@@ -82,6 +82,7 @@ class StaffViewSet(ModelViewSet):
         item = get_object_or_404(queryset, slug=slug)
         serializer = StaffSerializer(item)
         form = StaffForm(instance=item)
+        slug = request.resolver_match.kwargs['slug']
         return Response({'form': form, 'serializer': serializer, 'slug':slug, 'queryset':queryset},
                         template_name='people/staff_detail.html')
 

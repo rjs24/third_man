@@ -82,6 +82,7 @@ class Working_HrsViewSet(ModelViewSet):
         item = get_object_or_404(queryset, slug=slug)
         serializer = Working_HrsSerializer(item)
         form = WorkingHoursForm(instance=item)
+        slug = request.resolver_match.kwargs['slug']
         return Response({'form': form, 'serializer': serializer, 'slug':slug, 'queryset':queryset},
                         template_name='people/working_hrs_form_detail.html')
 

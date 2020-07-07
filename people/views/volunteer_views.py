@@ -82,6 +82,7 @@ class VolunteerViewSet(ModelViewSet):
         item = get_object_or_404(queryset, slug=slug)
         serializer = VolunteerSerializer(item)
         form = VolunteerForm(instance=item)
+        slug = request.resolver_match.kwargs['slug']
         return Response({'form': form, 'serializer': serializer, 'slug':slug, 'queryset':queryset},
                         template_name='people/volunteer_detail.html')
 

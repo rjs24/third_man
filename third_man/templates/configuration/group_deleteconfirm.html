@@ -9,10 +9,10 @@
         <div class="form-group">
             <form method="POST" class="form-group">
                 {% csrf_token %}
-            <h2> Are you sure you want to delete {{item.group_name}}?</h2>
+            <h2> Are you sure you want to delete {{item.name}}?</h2>
                 <br>
-                <button type="submit" class="save btn btn-danger" name="action" value="delete" formaction="{% url 'comms-delete' slug=slug %}">Delete</button>
-                <button type="submit" class="save btn btn-info" name="action" value="Back" formmethod="get" formaction="{% url 'comms-list' %}">Back</button>
+                <button type="submit" class="save btn btn-danger" name="action" value="delete" formaction="{% url 'group-delete' pk=pk %}">Delete</button>
+                <button type="submit" class="save btn btn-info" name="action" value="Back" formmethod="get" formaction="{% url 'group-list' %}">Back</button>
             </form>
         </div>
     </div>

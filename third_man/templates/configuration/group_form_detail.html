@@ -11,7 +11,7 @@
                 {% csrf_token %}
             {{form|crispy}}
                 <button type="submit" class="save btn btn-success" name="action" value="save" formmethod="post" formaction="{% url 'group-detail' pk=pk %}">Save group</button>
-                <button type="submit" class="save btn btn-danger" name="action" value="get_delate" formmethod="get" formaction="{% url 'group-deleteconf' pk=pk %}">Delete group</button>
+                <button type="submit" class="save btn btn-danger" name="action" value="get_delete" formmethod="get" formaction="{% url 'groups-deleteconfirm' pk=pk %}">Delete group</button>
                 <button type="submit" class="save btn btn-info" name="action" value="Back" formmethod="get" formaction="{% url 'group-list' %}">Back</button>
             </form>
         </div>

@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User, Group, GroupManager
 from django.contrib.auth import login
 
 from django.shortcuts import get_object_or_404
@@ -12,11 +12,11 @@ from rest_framework.permissions import IsAuthenticated
 from django.views import generic
 from .serializers import UserSerializer, GroupSerializer
 from django import shortcuts
-from django.contrib.auth.forms import UserChangeForm, UserCreationForm
+# from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 from django.contrib.auth.decorators import login_required, permission_required
 from django.shortcuts import render
 from django.views import View
-from .forms import GroupForm
+from .forms import GroupForm, UserForm
 
 
 class ConfigViewHome(View):
@@ -46,6 +46,7 @@ class UserViewSet(ModelViewSet):
             serializer.save()
             queryset = User.objects.all().order_by('pk')
             return Response({'queryset': queryset, 'serializer': serializer}, template_name='configuration/users.html', status=201)
+        print(serializer.errors)
         return Response(serializer.errors, status=400)
 
     @method_decorator(login_required, permission_required)
@@ -53,7 +54,7 @@ class UserViewSet(ModelViewSet):
         queryset = User.objects.all()
         item = get_object_or_404(queryset, pk=pk)
         serializer = UserSerializer(item)
-        form = UserChangeForm(instance=item)
+        form = UserForm(instance=item)
         pk = request.resolver_match.kwargs['pk']
         return Response({'form': form, 'serializer': serializer, 'pk':pk, 'queryset':queryset}, template_name='configuration/user_form_detail.html')
 
@@ -68,10 +69,10 @@ class UserViewSet(ModelViewSet):
             if serializer.is_valid():
                 serializer.save()
                 queryset = User.objects.all().order_by('pk')
-                return Response({'queryset': queryset, 'serializer': serializer}, template_name='configuration/user_form_detail.html', status=200)
+                return shortcuts.redirect(reverse('user-list'),status=200)
             return Response(serializer.errors, status=400)
 
-    @method_decorator(login_required)
+    @method_decorator(login_required, permission_required)
     def destroy(self, request, pk):
         if request.method == "POST":
             try:
@@ -83,7 +84,7 @@ class UserViewSet(ModelViewSet):
 
 
 class UserFormView(generic.FormView):
-    form_class = UserCreationForm
+    form_class = UserForm
     template_name = 'configuration/user_form_create.html'
     success_url = '/users/'
 
@@ -123,10 +124,11 @@ class GroupViewSet(ModelViewSet):
 
     @method_decorator(login_required, permission_required)
     def retrieve(self, request, pk):
-        queryset = User.objects.all()
+        queryset = Group.objects.all()
         item = get_object_or_404(queryset, pk=pk)
         serializer = GroupSerializer(item)
         form = GroupForm(instance=item)
+        pk = request.resolver_match.kwargs['pk']
         return Response({'form': form, 'serializer': serializer, 'pk':pk, 'queryset':queryset}, template_name='configuration/group_form_detail.html')
 
     @method_decorator(login_required, permission_required)
@@ -140,10 +142,10 @@ class GroupViewSet(ModelViewSet):
             if serializer.is_valid():
                 serializer.save()
                 queryset = Group.objects.all().order_by('pk')
-                return Response({'queryset': queryset, 'serializer': serializer}, template_name='configuration/group_form_detail.html', status=200)
+                return shortcuts.redirect(reverse('group-list'),status=200)
             return Response(serializer.errors, status=400)
 
-    @method_decorator(login_required)
+    @method_decorator(login_required, permission_required)
     def destroy(self, request, pk):
         if request.method == "POST":
             try:
@@ -151,7 +153,7 @@ class GroupViewSet(ModelViewSet):
             except User.DoesNotExist:
                 return Response(status=404)
             item.delete()
-            return shortcuts.redirect(reverse('user-list'), status=204)
+            return shortcuts.redirect(reverse('group-list'), status=204)
 
 
 class GroupFormView(generic.FormView):
@@ -161,7 +163,7 @@ class GroupFormView(generic.FormView):
 
 
 class GroupDeleteConfirmView(generic.DeleteView):
-    queryset = User.objects.all()
+    queryset = Group.objects.all()
     template_name = 'configuration/group_deleteconfirm.html'
     success_url = '/groups/'
 
