@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load rest_framework %}
+{% block content %}
+
+
+<div class="row justify-content-center">
+    <div class="col-auto">
+        <div class="form-group">
+            <br>
+            <h1> Login </h1>
+                <form method="post">
+                    {% csrf_token %}
+                    {{form|crispy}}
+                    <input type="submit" value="Login">
+                </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+{% endblock %}

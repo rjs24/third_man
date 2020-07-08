@@ -31,7 +31,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -42,15 +41,20 @@ INSTALLED_APPS = [
     'finance',
     'people',
     'analytics',
+    'configuration',
+    'media',
     'rest_framework',
     'third_man',
     'drf_generators',
     'crispy_forms',
-    'django_jenkins'
+    'django_jenkins',
+    'django.contrib.admin'
 ]
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
+LOGIN_URL = '/landing/'
 
 JENKINS_TASKS = (
     'django_jenkins.tasks.run_pep8',

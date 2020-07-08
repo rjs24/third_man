@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.urls import reverse
 from django.utils.decorators import method_decorator
 from rest_framework.viewsets import ModelViewSet
@@ -53,6 +53,7 @@ class APIVolunteerViewSet(ModelViewSet):
         return Response(status=204)
 
 
+@method_decorator(login_required(login_url="/landing/"), name="dispatch")
 class VolunteerViewSet(ModelViewSet):
     queryset = Volunteer.objects.all()
     serializer_class = VolunteerSerializer
@@ -60,13 +61,11 @@ class VolunteerViewSet(ModelViewSet):
     renderer_classes = [TemplateHTMLRenderer]
     template_name = "people/volunteer.html"
 
-    @method_decorator(login_required)
     def list(self, request):
         queryset = Volunteer.objects.order_by('pk')
         serializer = VolunteerSerializer(queryset, many=True)
         return Response({'queryset': queryset, 'serializer': serializer}, template_name='people/volunteer.html')
 
-    @method_decorator(login_required)
     def create(self, request):
         serializer = VolunteerSerializer(data=request.data)
         if serializer.is_valid():
@@ -76,7 +75,6 @@ class VolunteerViewSet(ModelViewSet):
                             status=201)
         return Response(serializer.errors, status=400)
 
-    @method_decorator(login_required)
     def retrieve(self, request, slug):
         queryset = Volunteer.objects.all()
         item = get_object_or_404(queryset, slug=slug)
@@ -86,7 +84,6 @@ class VolunteerViewSet(ModelViewSet):
         return Response({'form': form, 'serializer': serializer, 'slug':slug, 'queryset':queryset},
                         template_name='people/volunteer_detail.html')
 
-    @method_decorator(login_required)
     def update(self, request, slug):
         if request.method == 'POST':
             try:
@@ -100,7 +97,6 @@ class VolunteerViewSet(ModelViewSet):
                 return Response({'queryset': queryset, 'serializer': serializer}, template_name='people/volunteer.html', status=200)
             return Response(serializer.errors, status=400)
 
-    @method_decorator(login_required)
     def destroy(self, request, slug):
         if request.method == "POST":
             try:
@@ -111,12 +107,14 @@ class VolunteerViewSet(ModelViewSet):
             return shortcuts.redirect(reverse('volunteer-list'), status=204)
 
 
+@method_decorator(login_required(login_url="/landing/"), name="dispatch")
 class VolunteerFormView(generic.FormView):
     form_class = VolunteerForm
     template_name = 'people/volunteer_form_create.html'
     success_url = "/people/volunteer/"
 
 
+@method_decorator(login_required(login_url="/landing/"), name="dispatch")
 class VolunteerDeleteConfirmView(generic.DeleteView):
     queryset = Volunteer.objects.all()
     template_name = 'people/volunteer_deleteconfirm.html'

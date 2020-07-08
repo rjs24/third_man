@@ -1,5 +1,4 @@
 from django.conf.urls import include, url
-
 from .views import *
 
 user_list = UserViewSet.as_view({
@@ -54,5 +53,4 @@ urlpatterns = [
     # url('apps/', app_list, name='app-list'),
     # url(r'apps/edit/(<slug>[-\w\d]+)/', app_record, name='app-detail'),
     url(r'^settings/$', ConfigViewHome.as_view(), name='config'),
-    url('config/', include('django.contrib.auth.urls'))
 ]

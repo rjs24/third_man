@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.urls import reverse
 from django.utils.decorators import method_decorator
 from rest_framework.viewsets import ModelViewSet
@@ -52,6 +52,7 @@ class APICommsGroupViewSet(ModelViewSet):
         return Response(status=204)
 
 
+@method_decorator(login_required(login_url="/landing/"), name="dispatch")
 class CommsGroupViewSet(ModelViewSet):
     queryset = CommsGroup.objects.all()
     serializer_class = CommsGroupSerializer
@@ -59,13 +60,11 @@ class CommsGroupViewSet(ModelViewSet):
     renderer_classes = [TemplateHTMLRenderer]
     template_name = 'comms/comms_group.html'
 
-    @method_decorator(login_required)
     def list(self, request):
         queryset = CommsGroup.objects.all().order_by('pk')
         serializer = CommsGroupSerializer(queryset, many=True)
         return Response({'queryset': queryset, 'serializer': serializer}, template_name='comms/comms_group.html')
 
-    @method_decorator(login_required)
     def create(self, request):
         print(request.data)
         serializer = CommsGroupSerializer(data=request.data)
@@ -75,7 +74,6 @@ class CommsGroupViewSet(ModelViewSet):
             return Response({'queryset': queryset, 'serializer': serializer}, template_name='comms/comms_group.html', status=201)
         return Response(serializer.errors, status=400)
 
-    @method_decorator(login_required)
     def retrieve(self, request, slug):
         queryset = CommsGroup.objects.all()
         item = get_object_or_404(queryset, slug=slug)
@@ -84,7 +82,6 @@ class CommsGroupViewSet(ModelViewSet):
         slug = request.resolver_match.kwargs['slug']
         return Response({'form': form, 'serializer': serializer, 'slug':slug, 'queryset':queryset}, template_name='comms/comms_group_form_detail.html')
 
-    @method_decorator(login_required)
     def update(self, request, slug):
         if request.method == 'POST':
             try:
@@ -98,7 +95,6 @@ class CommsGroupViewSet(ModelViewSet):
                 return Response({'queryset': queryset, 'serializer': serializer}, template_name='comms/comms_group.html', status=200)
             return Response(serializer.errors, status=400)
 
-    @method_decorator(login_required)
     def destroy(self, request, slug):
         if request.method == "POST":
             try:
@@ -109,12 +105,14 @@ class CommsGroupViewSet(ModelViewSet):
             return shortcuts.redirect(reverse('comms-list'), status=204)
 
 
+@method_decorator(login_required(login_url="/landing/"), name="dispatch")
 class CommsFormView(generic.FormView):
     form_class = CommsForm
     template_name = 'comms/comms_group_form_create.html'
     success_url = "/comms/"
 
 
+@method_decorator(login_required(login_url="/landing/"), name="dispatch")
 class CommsDeleteConfirmView(generic.DeleteView):
     queryset = CommsGroup.objects.all()
     template_name = 'comms/comms_group_deleteconfirm.html'

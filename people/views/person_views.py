@@ -1,15 +1,14 @@
 from django.shortcuts import get_object_or_404
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.urls import reverse
 from django.utils.decorators import method_decorator
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.response import Response
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.permissions import IsAuthenticated
 from django.views import generic
 from rest_framework.response import Response
-from ..serializers import RoleSerializer, PersonSerializer, Working_HrsSerializer, StaffSerializer, VolunteerSerializer
-from ..models import Role, Person, Working_Hrs, Staff, Volunteer
+from ..serializers import PersonSerializer
+from ..models import Role, Person
 from django import shortcuts
 from ..forms import PersonForm
 
@@ -54,6 +53,7 @@ class APIPersonViewSet(ModelViewSet):
         return Response(status=204)
 
 
+@method_decorator(login_required(login_url="/landing/"), name="dispatch")
 class PersonViewSet(ModelViewSet):
     queryset = Person.objects.all()
     serializer_class = PersonSerializer
@@ -61,13 +61,11 @@ class PersonViewSet(ModelViewSet):
     renderer_classes = [TemplateHTMLRenderer]
     template_name = 'people/persons.html'
 
-    @method_decorator(login_required)
     def list(self, request):
         queryset = Person.objects.order_by('pk')
         serializer = PersonSerializer(queryset, many=True)
         return Response({'queryset': queryset, 'serializer':serializer}, template_name='people/persons.html')
 
-    @method_decorator(login_required)
     def create(self, request):
         serializer = PersonSerializer(data=request.data)
         if serializer.is_valid():
@@ -77,7 +75,6 @@ class PersonViewSet(ModelViewSet):
                             status=201)
         return Response(serializer.errors, status=400)
 
-    @method_decorator(login_required)
     def retrieve(self, request, slug):
         queryset = Person.objects.all()
         item = get_object_or_404(queryset, slug=slug)
@@ -87,7 +84,6 @@ class PersonViewSet(ModelViewSet):
         return Response({'form': form, 'serializer': serializer, 'slug':slug, 'queryset':queryset},
                         template_name='people/person_detail.html')
 
-    @method_decorator(login_required)
     def update(self, request, slug):
         if request.method == "POST":
             try:
@@ -102,7 +98,6 @@ class PersonViewSet(ModelViewSet):
                                 status=200)
             return Response(serializer.errors, status=400)
 
-    @method_decorator(login_required)
     def destroy(self, request, slug):
         try:
             item = Person.objects.get(slug=slug)
@@ -112,12 +107,14 @@ class PersonViewSet(ModelViewSet):
         return shortcuts.redirect(reverse('person-list'))
 
 
+@method_decorator(login_required(login_url="/landing/"), name="dispatch")
 class PersonFormView(generic.FormView):
     form_class = PersonForm
     template_name = 'people/person_form_create.html'
     success_url = "/people/person/"
 
 
+@method_decorator(login_required(login_url="/landing/"), name="dispatch")
 class PersonDeleteConfirmView(generic.DeleteView):
     queryset = Role.objects.all()
     template_name = 'people/person_deleteconfirm.html'

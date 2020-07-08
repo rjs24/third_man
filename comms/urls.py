@@ -2,6 +2,7 @@ from django.conf.urls import include, url
 from .api import router
 from .views import CommsGroupViewSet, CommsFormView, CommsDeleteConfirmView
 
+
 comms_list = CommsGroupViewSet.as_view({
     'get':'list',
     'post':'create',

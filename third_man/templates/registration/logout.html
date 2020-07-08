@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load rest_framework %}
+{% block content %}
+
+
+<div class="row justify-content-center">
+    <div class="col-auto">
+        <div class="form-group">
+            <br>
+            <h1> {{user}}, Are you sure you want to logout? </h1>
+            <br>
+            <a href="/">Back</a>
+            <br>
+            <br>
+            <a href="/logout/" class="save btn btn-danger">Logout</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.urls import reverse
 from django.utils.decorators import method_decorator
 from rest_framework.viewsets import ModelViewSet
@@ -53,6 +53,7 @@ class APIStaffViewSet(ModelViewSet):
         return Response(status=204)
 
 
+@method_decorator(login_required(login_url="/landing/"), name="dispatch")
 class StaffViewSet(ModelViewSet):
     queryset = Staff.objects.all()
     serializer_class = StaffSerializer
@@ -60,13 +61,11 @@ class StaffViewSet(ModelViewSet):
     renderer_classes = [TemplateHTMLRenderer]
     template_name = "people/staff.html"
 
-    @method_decorator(login_required)
     def list(self, request):
         queryset = Staff.objects.order_by('pk')
         serializer = StaffSerializer(queryset, many=True)
         return Response({'queryset': queryset, 'serializer': serializer}, template_name='people/staff.html')
 
-    @method_decorator(login_required)
     def create(self, request):
         serializer = StaffSerializer(data=request.data)
         if serializer.is_valid():
@@ -76,7 +75,6 @@ class StaffViewSet(ModelViewSet):
                             status=201)
         return Response(serializer.errors, status=400)
 
-    @method_decorator(login_required)
     def retrieve(self, request, slug):
         queryset = Staff.objects.all()
         item = get_object_or_404(queryset, slug=slug)
@@ -86,7 +84,6 @@ class StaffViewSet(ModelViewSet):
         return Response({'form': form, 'serializer': serializer, 'slug':slug, 'queryset':queryset},
                         template_name='people/staff_detail.html')
 
-    @method_decorator(login_required)
     def update(self, request, slug):
         if request.method == 'POST':
             try:
@@ -100,7 +97,6 @@ class StaffViewSet(ModelViewSet):
                 return Response({'queryset': queryset, 'serializer': serializer}, template_name='people/staff.html', status=200)
             return Response(serializer.errors, status=400)
 
-    @method_decorator(login_required)
     def destroy(self, request, slug):
         if request.method == "POST":
             try:
@@ -111,12 +107,14 @@ class StaffViewSet(ModelViewSet):
             return shortcuts.redirect(reverse('staff-list'), status=204)
 
 
+@method_decorator(login_required(login_url="/landing/"), name="dispatch")
 class StaffFormView(generic.FormView):
     form_class = StaffForm
     template_name = 'people/staff_form_create.html'
     success_url = "/people/staff/"
 
 
+@method_decorator(login_required(login_url="/landing/"), name="dispatch")
 class StaffDeleteConfirmView(generic.DeleteView):
     queryset = Staff.objects.all()
     template_name = 'people/staff_deleteconfirm.html'

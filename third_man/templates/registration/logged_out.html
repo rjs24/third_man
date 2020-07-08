@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load rest_framework %}
+{% block content %}
+
+
+
+<div class="row justify-content-center">
+    <div class="col-auto">
+        <br>
+        <h1> Welcome to Third man software, a helping hand for the third sector!</h1>
+        <h1>If you've been invited to do so, you can register at this link <a href="/accounts/sign_up/" action="{% url 'sign-up' %}">here</a></h1>
+        <h1> Or, if you already have an account, you can login below: </h1>
+        <br>
+        <a href="/login/" class="btn btn-primary">Login</a>
+    </div>
+</div>
+
+{% endblock %}

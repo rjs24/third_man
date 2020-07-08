@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.urls import reverse
 from django.utils.decorators import method_decorator
 from rest_framework.viewsets import ModelViewSet
@@ -56,6 +56,7 @@ class APIEventViewSet(ModelViewSet):
         return Response(status=204)
 
 
+@method_decorator(login_required(login_url="/landing/"), name="dispatch")
 class EventViewSet(ModelViewSet):
     queryset = Event.objects.all()
     serializer_class = EventSerializer
@@ -63,13 +64,11 @@ class EventViewSet(ModelViewSet):
     renderer_classes = [TemplateHTMLRenderer]
     template_name = 'events/events.html'
 
-    @method_decorator(login_required)
     def list(self, request):
         queryset = Event.objects.all().order_by('pk')
         serializer = EventSerializer(queryset, many=True)
         return Response({'queryset': queryset, 'serializer': serializer.data}, template_name='events/events.html')
 
-    @method_decorator(login_required)
     def create(self, request):
         print(request.data)
         serializer = EventSerializer(data=request.data)
@@ -80,7 +79,6 @@ class EventViewSet(ModelViewSet):
                             template_name='events/events.html', status=201)
         return Response(serializer.errors, status=400)
 
-    @method_decorator(login_required)
     def retrieve(self, request, slug):
         queryset = Event.objects.all()
         item = get_object_or_404(queryset, slug=slug)
@@ -90,7 +88,6 @@ class EventViewSet(ModelViewSet):
         return Response({'form': form, 'serializer': serializer, 'slug':slug, 'queryset':queryset},
                         template_name='events/event_form_detail.html')
 
-    @method_decorator(login_required)
     def update(self, request, slug):
         if request.method == 'POST':
             try:
@@ -104,7 +101,6 @@ class EventViewSet(ModelViewSet):
                 return Response({'queryset': queryset, 'serializer': serializer}, template_name='events/events.html', status=200)
             return Response(serializer.errors, status=400)
 
-    @method_decorator(login_required)
     def destroy(self, request, slug):
         try:
             item = Event.objects.get(slug=slug)
@@ -114,12 +110,14 @@ class EventViewSet(ModelViewSet):
         return shortcuts.redirect(reverse('event-list'), status=204)
 
 
+@method_decorator(login_required(login_url="/landing/"), name="dispatch")
 class EventsFormView(generic.FormView):
     form_class = EventForm
     template_name = 'events/event_form_create.html'
     success_url = '/events/'
 
 
+@method_decorator(login_required(login_url="/landing/"), name="dispatch")
 class EventDeleteConfirmView(generic.DeleteView):
     queryset = Event.objects.all()
     template_name = 'events/event_deleteconfirm.html'
@@ -132,6 +130,7 @@ class EventDeleteConfirmView(generic.DeleteView):
         return shortcuts.render(request, 'events/event_deleteconfirm.html', {'item': item, 'slug': slug})
 
 
+@method_decorator(login_required(login_url="/landing/"), name="dispatch")
 class CalendarView(generic.ListView):
     model = Event
     template_name = 'events/events_calendar.html'

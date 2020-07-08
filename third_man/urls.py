@@ -18,15 +18,22 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from . import views
+from django.views.generic import TemplateView
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.HomePageView.as_view(), name='index.html'),
+    path('', views.HomePageView.as_view(), name='home'),
     path('', include('events.urls')),
     path('', include('comms.urls')),
     path('', include('finance.urls')),
     path('', include('people.urls')),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('', include('django.contrib.auth.urls')),
-    path('', include('configuration.urls'))
+    path('', include('configuration.urls')),
+    path('landing/', TemplateView.as_view(template_name='registration/non_user.html'), name="nonuser"),
+    path('accounts/sign_up/', views.sign_up, name="sign-up"),
+    path('accounts/profile/', TemplateView.as_view(template_name="registration/user_profile.html"), name="sign-up"),
+    path('logoutuser/', TemplateView.as_view(template_name='registration/logout.html'), name="logout"),
+    path('logout/', TemplateView.as_view(template_name='registration/logged_out.html'), name="nonuser"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
