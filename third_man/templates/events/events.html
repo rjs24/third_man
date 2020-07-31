@@ -17,7 +17,6 @@
                     <th>Event description</th>
                     <th>start time</th>
                     <th>end time</th>
-                    <th>Recurring</th>
                     <th>Recurring frequency</th>
                 </tr>
             </thead>
@@ -38,9 +37,6 @@
                     </td>
                     <td>
                         {{row.end}}
-                    </td>
-                    <td>
-                        {{row.recurring}}
                     </td>
                     <td>
                         {% if row.recurring == True %}

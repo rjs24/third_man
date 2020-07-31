@@ -3,6 +3,7 @@ from rest_framework.test import APIClient
 import json
 from ..models import Person, Role, Staff, Volunteer
 from django.contrib.auth.models import User
+from ..serializers import UserSerializer, RoleSerializer, PersonSerializer
 
 
 class PeopleAPITest(TestCase):
@@ -75,19 +76,18 @@ class PeopleAPITest(TestCase):
         """test api to create a person"""
         client = APIClient()
         resp = client.post('/api/person',
-                           {"userid": self.user_director, "email": "joebloggs@email.com", "first_name": "Joe",
+                           {"userid": UserSerializer(self.user_director), "email": "joebloggs@email.com", "first_name": "Joe",
                             "second_name": "Bloggs", "date_of_birth": "1985-06-21", "postcode": "S1 9AA",
-                            "address": "29, Acacia Road, Nuttytown", "organisation_role": self.role_director,
+                            "address": "29, Acacia Road, Nuttytown", "organisation_role": RoleSerializer(self.role_director),
                             "allowed_access": 3, "notes": "likes pizza", "line_manage": None }, format='json')
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(json.loads(resp.content), json.loads('{ "person_status": "person created" }'))
-
 
     def test_editPerson(self):
         """test api to edit person"""
         client = APIClient()
         resp = client.put('/api/person',
-                           {"search": {"userid": self.user_director}, "notes": "Actually prefers curry"}, format='json')
+                           {"search": {"userid": UserSerializer(self.user_director)}, "notes": "Actually prefers curry"}, format='json')
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(json.loads(resp.content), json.loads('{ "person_status": "person edited" }'))
 
@@ -95,7 +95,7 @@ class PeopleAPITest(TestCase):
         """test api to delete person"""
         client = APIClient()
         resp = client.delete('/api/role',
-                           {"search": {"userid": self.user_director}}, format='json')
+                           {"search": {"userid": UserSerializer(self.user_director)}}, format='json')
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(json.loads(resp.content), json.loads('{ "person_status": "person deleted" }'))
 
@@ -111,7 +111,7 @@ class PeopleAPITest(TestCase):
         """test api to create a staff"""
         client = APIClient()
         resp = client.post('/api/person',
-                           {"person": self.employee_a, "staff_number": "DF548", "nat_insurance_num": "DF000000A",
+                           {"person": PersonSerializer(self.employee_a), "staff_number": "DF548", "nat_insurance_num": "DF000000A",
                             "salary": 23475}, format='json')
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(json.loads(resp.content), json.loads('{ "person_status": "person created" }'))
@@ -121,7 +121,7 @@ class PeopleAPITest(TestCase):
         """test api to edit staff"""
         client = APIClient()
         resp = client.put('/api/staff',
-                           {"search": {"person": self.employee_a.userid}, "staff_number": "XL456"}, format='json')
+                           {"search": {"person": self.employee_a}, "staff_number": "XL456"}, format='json')
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(json.loads(resp.content), json.loads('{ "person_status": "person edited" }'))
 
@@ -129,7 +129,7 @@ class PeopleAPITest(TestCase):
         """test api to delete staff"""
         client = APIClient()
         resp = client.delete('/api/staff',
-                           {"search": {"person": self.user_director}}, format='json')
+                           {"search": {"person": PersonSerializer(self.employee_a)}}, format='json')
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(json.loads(resp.content), json.loads('{ "staff_status": "staff deleted" }'))
 
@@ -145,7 +145,7 @@ class PeopleAPITest(TestCase):
         """test api to create a volunteer"""
         client = APIClient()
         resp = client.post('/api/volunteer',
-                           {"person": self.employee_a, "staff_number": "DF550"}, format='json')
+                           {"person": PersonSerializer(self.employee_b), "staff_number": "DF550"}, format='json')
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(json.loads(resp.content), json.loads('{ "volunteer_status": "volunteer created" }'))
 
@@ -153,7 +153,7 @@ class PeopleAPITest(TestCase):
         """test api to edit volunteer"""
         client = APIClient()
         resp = client.put('/api/volunteer',
-                          {"search": {"person": self.employee_b.userid}, "staff_number": "XL456"}, format='json')
+                          {"search": {"person": PersonSerializer(self.employee_b)}, "staff_number": "XL456"}, format='json')
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(json.loads(resp.content), json.loads('{ "volunteer_status": "volunteer edited" }'))
 
@@ -161,6 +161,6 @@ class PeopleAPITest(TestCase):
         """test api to delete volunteer"""
         client = APIClient()
         resp = client.delete('/api/volunteer',
-                             {"search": {"person": self.employee_b.userid}}, format='json')
+                             {"search": {"person": PersonSerializer(self.employee_b.userid)}}, format='json')
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(json.loads(resp.content), json.loads('{ "volunteer_status": "volunteer deleted" }'))

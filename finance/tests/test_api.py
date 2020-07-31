@@ -2,6 +2,7 @@ from django.test import TestCase
 from datetime import datetime, timedelta
 from ..models import Donation, Ticket, Merchandise, Basket, Giftaid
 from events.models import Event
+from events.serializers import EventSerializer
 from people.models import Person, Role
 from django.contrib.auth.models import User
 from rest_framework.test import APIClient
@@ -22,11 +23,11 @@ class FinanceAPITest(TestCase):
                                         second_name="bloggs", date_of_birth=datetime.strptime("1985-06-21", "%Y-%m-%d"),
                                         postcode="S1 9AA", address= "29, Acacia Road, Nuttytown", organisation_role=self.role,
                                         allowed_access=3, notes="likes pizza", line_manage=self.top_role)
-        self.event_a = Event.objects.create(title="summer fete",
-                                  start=datetime.strptime("2020-07-03 12:00", "%Y-%m-%d %H:%M"),
-                                  end=datetime.strptime("2020-07-03 16:00", "%Y-%m-%d %H:%M"), event_owner=self.person_a,
+        self.event_a = Event.objects.create(title="spring fete",
+                                  start=datetime.strptime("2020-08-03 12:00", "%Y-%m-%d %H:%M"),
+                                  end=datetime.strptime("2020-08-03 16:00", "%Y-%m-%d %H:%M"), event_owner=self.person_a,
                                   duration=timedelta(hours=4),
-                                  recurring=False, description="happy summer fete", website_publish=True)
+                                  recurring=False, description="happy spring fete", website_publish=True)
         self.person_a.save()
         self.event_a.save()
 
@@ -42,7 +43,7 @@ class FinanceAPITest(TestCase):
         """test api to create a ticket based on the supplied event"""
         client = APIClient()
         resp = client.post('/api/ticket',
-                           {"title": self.event_a.title, "event": self.event_a, "price": 12.0,
+                           {"title": self.event_a.title, "event": EventSerializer(self.event_a), "price": 12.0,
                             "ticket_type": 1, "ticket_quantity": 2}, format='json')
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(json.loads(resp.content), json.loads('{ "ticket status": "ticket created for event {}" }'
@@ -52,7 +53,7 @@ class FinanceAPITest(TestCase):
         """ test api to edit a created ticket based on existing event"""
         client = APIClient()
         resp = client.put('/api/ticket',
-                           {"search": {"title": "summer fete"}, "price": 10.0}, format='json'
+                           {"search": {"title": "spring fete"}, "price": 10.0}, format='json'
                            )
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(json.loads(resp.content), json.loads('{ "ticket status": "ticket price edited"'))
@@ -61,7 +62,7 @@ class FinanceAPITest(TestCase):
         """ test api to delete a created ticket based on existing event"""
         client = APIClient()
         resp = client.delete('/api/ticket',
-                           {"search": {"title": "summer fete"}}, format='json'
+                           {"search": {"title": "spring fete"}}, format='json'
                            )
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(json.loads(resp.content), json.loads('{ "ticket status": "ticket deleted"'))

@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from people.models import Person, Role
 from comms.models import CommsGroup
 from django.contrib.auth.models import User
-from website.models import PublicEvent
+# from website.models import PublicEvent
 
 class EventTest(TestCase):
     """Test event module"""
@@ -30,7 +30,8 @@ class EventTest(TestCase):
                                         allowed_access=1, notes="likes rice", line_manage=self.top_role)
         self.rogue_employee.save()
 
-        self.comms_grp = CommsGroup.objects.create(group_name="fete group", group_purpose="support summer fete")
+        self.comms_grp = CommsGroup.objects.create(group_owner=self.person_a, group_name="fete group",
+                                                   group_purpose="support summer fete")
         self.comms_grp.save()
 
 
@@ -38,12 +39,12 @@ class EventTest(TestCase):
                                   start=datetime.strptime("2020-07-03 12:00", "%Y-%m-%d %H:%M"),
                                   end=datetime.strptime("2020-07-03 16:00", "%Y-%m-%d %H:%M"), event_owner=self.person_a,
                                   duration=timedelta(hours=4),
-                                  recurring=False, description="happy summer fete", website_publish=True)
+                                  recurrence_interval=0, description="happy summer fete", website_publish=True)
         self.event_b = Event.objects.create(title="sunday service",
                                   start=datetime.strptime("2020-03-08 10:00", "%Y-%m-%d %H:%M"),
                                   end=datetime.strptime("2020-03-08 11:00","%Y-%m-%d %H:%M"), event_owner=self.person_a,
                                   duration=timedelta(hours=1),
-                                  recurring=True, description="regular Sunday 10 am service", website_publish=False)
+                                  recurrence_interval=2, description="regular Sunday 10 am service", website_publish=False)
         self.event_a.save()
         self.event_b.save()
 
@@ -121,7 +122,7 @@ class EventTest(TestCase):
                                   start=datetime.strptime("2020-03-27 12:00", "%Y-%m-%d %H:%M"),
                                   end=datetime.strptime("2020-03-27 16:00", "%Y-%m-%d %H:%M"), event_owner=self.rogue_employee,
                                   duration=timedelta(hours=4),
-                                  recurring=False, description="a meeting", website_publish=True)
+                                  recurrence_interval=0, description="a meeting", website_publish=True)
         rogue_event.save()
         public_rogue_event = PublicEvent.objects.create(event=rogue_event, more_info_link='http://organisation.co.uk/rogue_campaign',
             ticket_link='http://organisation.co.uk/tickets', contact_number='00000000',

@@ -70,7 +70,6 @@ class EventViewSet(ModelViewSet):
         return Response({'queryset': queryset, 'serializer': serializer.data}, template_name='events/events.html')
 
     def create(self, request):
-        print(request.data)
         serializer = EventSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()

@@ -66,7 +66,6 @@ class CommsGroupViewSet(ModelViewSet):
         return Response({'queryset': queryset, 'serializer': serializer}, template_name='comms/comms_group.html')
 
     def create(self, request):
-        print(request.data)
         serializer = CommsGroupSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()

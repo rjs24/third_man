@@ -2,8 +2,6 @@ from django.test import TestCase
 from rest_framework.test import APIClient
 from django.contrib.auth.models import User
 from people.models import Role, Person
-from people.serializers import PersonSerializer
-from django.db.models import Count
 from comms.models import CommsGroup
 from datetime import datetime
 import json

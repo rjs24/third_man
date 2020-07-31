@@ -8,11 +8,13 @@ from people.models import Person
 
 
 class Event(models.Model):
+    UNIQUE = 0
     DAILY = 1
     WEEKLY = 2
     MONTHLY = 3
     YEARLY = 4
     RECURRENCE_INTERVAL = (
+        (UNIQUE, ('Set event to non-recurring')),
         (DAILY, ('Set event to daily recurrence')),
         (WEEKLY, ('Set event to weekly recurrence')),
         (MONTHLY, ('Set event to monthly recurrence')),
@@ -26,12 +28,11 @@ class Event(models.Model):
     end = models.DateTimeField(default=django.utils.timezone.now)
     duration = models.DurationField(default=timedelta())
     invites = models.ManyToManyField('comms.CommsGroup')
-    recurring = models.BooleanField(default=False)
     description = models.TextField(max_length=150, default='', validators=[validators.RegexValidator(
             regex='^[a-zA-Z0-9 .,\r\n]*$', message="Only use alphanumerics please", code="invalid event description")])
     website_publish = models.BooleanField(default=False)
     recurrence_interval = models.PositiveSmallIntegerField(choices=RECURRENCE_INTERVAL, default=WEEKLY)
-    slug = models.SlugField(unique=True, editable=False, max_length=title.max_length, default=None)
+    slug = models.SlugField(unique=True, editable=True, max_length=title.max_length, default=None)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)

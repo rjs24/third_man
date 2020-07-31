@@ -18,11 +18,6 @@ class PeopleTest(TestCase):
         self.user_employee_a.save()
         self.user_employee_b.save()
 
-        self.comms_employee_grp = CommsGroup.objects.create(group_name="all", group_purpose="general comms")
-        self.comms_managers_only = CommsGroup.objects.create(group_name="managers", group_purpose="management")
-        self.comms_employee_grp.save()
-        self.comms_managers_only.save()
-
         self.role_director = Role.objects.create(role_name="Director", role_responsibility="Everything")
         self.role_manager = Role.objects.create(role_name="manager", role_responsibility="Nearly everything")
         self.role_employee = Role.objects.create(role_name="all_things", role_responsibility="make it all work")
@@ -55,6 +50,12 @@ class PeopleTest(TestCase):
         self.manager.save()
         self.employee_a.save()
         self.employee_b.save()
+        self.comms_employee_grp = CommsGroup.objects.create(group_owner=self.manager, group_name="all",
+                                                            group_purpose="general comms")
+        self.comms_managers_only = CommsGroup.objects.create(group_owner=self.manager, group_name="managers",
+                                                             group_purpose="management")
+        self.comms_employee_grp.save()
+        self.comms_managers_only.save()
         self.staff_a = Staff.objects.create(person=self.employee_a, staff_number="DF548", nat_insurance_num="DF000000A",
                                             salary=23457)
         self.volunteer_a = Volunteer.objects.create(person=self.employee_b, staff_number="DF549")

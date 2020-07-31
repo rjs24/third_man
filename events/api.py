@@ -4,4 +4,4 @@ from .views import APIEventViewSet
 router = DefaultRouter(trailing_slash=False)
 
 router.register(r'events', APIEventViewSet, basename='Events-list')
-router.register(r'events_detail/(?P<slug>[-\w\d]+)/$', APIEventViewSet, basename='Events-detail')
+router.register(r'events/(?P<slug>[-\w\d]+)/$', APIEventViewSet, basename='Events-detail')

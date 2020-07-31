@@ -105,9 +105,14 @@ class Donation(models.Model):
     slug = models.SlugField(unique=True, editable=False, max_length=200, default=None)
 
     def save(self, *args, **kwargs):
-        slug_string = self.campaign + ' ' + self.giftaid_detail.name
-        self.slug = slugify(slug_string)
-        super(Donation, self).save(*args, **kwargs)
+        if self.giftaid:
+            slug_string = self.campaign + ' ' + self.giftaid_detail.name
+            self.slug = slugify(slug_string)
+            super(Donation, self).save(*args, **kwargs)
+        else:
+            slug_string = self.campaign
+            self.slug = slugify(slug_string)
+            super(Donation, self).save(*args, **kwargs)
 
     def __str__(self):
         return '{}, {}'.format(self.amount_2_donate, self.giftaid_detail.name)

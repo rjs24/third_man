@@ -4,7 +4,7 @@ from .models import Event
 
 class EventAdmin(admin.ModelAdmin):
     model = Event
-    list_display = ('title', 'event_owner', 'start', 'end', 'duration', 'invites', 'recurring', 'description',
+    list_display = ('title', 'event_owner', 'start', 'end', 'duration', 'invites', 'description', 'recurrence_interval',
                     'website_publish')
 
 

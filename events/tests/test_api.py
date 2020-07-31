@@ -7,7 +7,6 @@ from django.contrib.auth.models import User
 from rest_framework.test import APIClient
 import json
 
-
 class EventAPITest(TestCase):
 
     @classmethod
@@ -24,44 +23,80 @@ class EventAPITest(TestCase):
                                         postcode="S1 9AA", address= "29, Acacia Road, Nuttytown", organisation_role=self.role,
                                         allowed_access=3, notes="likes pizza", line_manage=self.top_role)
         self.person_a.save()
-        self.comms_grp = CommsGroup.objects.create(group_name="fete group", group_purpose="support summer fete")
+        self.comms_grp = CommsGroup.objects.create(group_owner=self.person_a,
+                                                   group_name="fete group", group_purpose="support summer fete")
         self.comms_grp.save()
 
     def test_get_Events(self):
         """Test api to list events"""
+        event_a = Event.objects.create(title="christmas party",
+                                            start=datetime.strptime("2020-12-03 12:00", "%Y-%m-%d %H:%M"),
+                                            end=datetime.strptime("2020-12-03 16:00", "%Y-%m-%d %H:%M"),
+                                            event_owner=self.person_a,
+                                            duration=timedelta(hours=4),
+                                            recurrence_interval=0, description="happy christmas party", website_publish=True)
+        event_a.invites.add(self.comms_grp)
+        event_a.save()
+        event_b = Event.objects.create(title="Spring clean",
+                                            start=datetime.strptime("2020-04-03 09:00", "%Y-%m-%d %H:%M"),
+                                            end=datetime.strptime("2020-04-03 16:00", "%Y-%m-%d %H:%M"),
+                                            event_owner=self.person_a,
+                                            duration=timedelta(hours=7),
+                                            recurrence_interval=0, description="get the church clean", website_publish=True)
+        event_b.invites.add(self.comms_grp)
+        event_b.save()
         client = APIClient()
-        resp = client.put('/api/event')
+        resp = client.get('/api/events')
         self.assertEqual(resp.status_code, 200)
         events = Event.objects.all()
-        self.assertEqual(json.loads(resp.content), json.loads(events))
+        self.assertEqual(events[0].title, json.loads(resp.content)[1]['title'])
+        self.assertEqual(events[1].title, json.loads(resp.content)[0]['title'])
 
     def test_newEvent(self):
         """Test api to create new event"""
         client = APIClient()
-        resp = client.post('/api/event',
-            {"event_owner": '{}', "title": "PCC", "start": datetime.strptime("2020-06-24 19:00", "%Y-%m-%d %H:%M"),
-              "end":datetime.strptime("1985-06-21 21:00", "%Y-%m-%d %H:%M"), "duration": timedelta(hours=2),
-            "invites": self.comms_grp, "recurring": False, "description": "PCC meeting",
-        "website_publish": False}, format='json')
-        self.assertEqual(resp.status_code, 200)
-        self.assertEqual(json.loads(resp.content), json.loads('{ "event status": "event created", "title": "PCC", '
-                                                   '"start": {}, "user", {} }'.format(
-            datetime.strptime("2020-06-24 19:00", "%Y-%m-%d %H:%M"), self.user)))
+        data = {"event_owner": self.person_a.id, "title": "PCC",
+                "start": datetime.strptime("2020-06-24 19:00", "%Y-%m-%d %H:%M"),
+                "end": datetime.strptime("1985-06-21 21:00", "%Y-%m-%d %H:%M"), "duration": timedelta(hours=2),
+                "recurrence_interval": 3, "invites": [self.comms_grp.group_name], "description": "PCC meeting",
+                "website_publish": False}
+        resp = client.post('/api/events', data=data, format='json')
+        self.assertEqual(resp.status_code, 201)
+        query = Event.objects.get(title="PCC")
+        self.assertEqual(data['title'], query.title)
 
     def test_editEvent(self):
         """Test api to edit an event"""
+        event_a = Event.objects.create(title="Christmas meal",
+                                            start=datetime.strptime("2020-12-03 12:00", "%Y-%m-%d %H:%M"),
+                                            end=datetime.strptime("2020-12-03 16:00", "%Y-%m-%d %H:%M"),
+                                            event_owner=self.person_a,
+                                            duration=timedelta(hours=4),
+                                            recurrence_interval=0, description="happy christmas party", website_publish=True)
+        event_a.invites.add(self.comms_grp)
+        event_a.save()
         client = APIClient()
-        resp = client.put('/api/event',
-            { "search": {"title": "PCC meeting"}, "start": datetime.strptime("2020-06-24 20:00", "%Y-%m-%d %H:%M"),
-            "end": datetime.strptime("1985-06-21 22:00", "%Y-%m-%d %H:%M")}, format='json')
+        update_data = {"event_owner": self.person_a.pk, "title": "Christmas meal", "start":
+            datetime.strptime("2020-12-07 12:00", "%Y-%m-%d %H:%M"),
+            "end": datetime.strptime("2020-12-07 16:00", "%Y-%m-%d %H:%M"), "duration": timedelta(hours=4),
+                "invites": [self.comms_grp.pk], "recurrence_interval": 0, "description": "Christmas party yahoo",
+                       "website_publish": False}
+        resp = client.put('/api/events/christmas-meal', data=update_data, format='json')
         self.assertEqual(resp.status_code, 200)
-        self.assertEqual(json.loads(resp.content), json.loads('{ "event status": "event edit complete", "event_title": title,'
-                                                   '"user", userid }'))
+        event_check = Event.objects.get(title="Christmas meal")
+        self.assertEqual(event_check.description, "Christmas party yahoo")
 
     def test_deleteEvent(self):
         """Test api to delete an event"""
+        event_a = Event.objects.create(title="christmas party",
+                                            start=datetime.strptime("2020-12-03 12:00", "%Y-%m-%d %H:%M"),
+                                            end=datetime.strptime("2020-12-03 16:00", "%Y-%m-%d %H:%M"),
+                                            event_owner=self.person_a,
+                                            duration=timedelta(hours=4),
+                                            recurrence_interval=0, description="happy christmas party", website_publish=True)
+        event_a.invites.add(self.comms_grp)
+        event_a.save()
         client = APIClient()
-        resp = client.put('/api/event',
-            { "search": {"title": "PCC meeting"}}, format='json')
-        self.assertEqual(resp.status_code, 200)
-        self.assertEqual(json.loads(resp.content), json.loads('{ "event status": "event delete complete"}'))
+        resp = client.delete('/api/events/christmas-party',
+            { "search": {"title": "christmas party"}}, format='json')
+        self.assertEqual(resp.status_code, 204)
