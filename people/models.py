@@ -61,7 +61,7 @@ class Person(models.Model):
     second_name = models.CharField(max_length=50,validators=[validators.RegexValidator(
         regex='^[a-zA-Z-]*$', message="Surname must be alpha characters only",
         code="invalid event in second_name")])
-    date_of_birth = models.DateField()
+    date_of_birth = models.DateTimeField()
     postcode = models.CharField(max_length=8,validators=[validators.RegexValidator(
         regex='^[A-Z0-9]*$', message="Postcode can only be alphanumeric upper-case",
         code="invalid event in postcode")])
@@ -100,17 +100,24 @@ class Person(models.Model):
 
 class Working_Hrs(models.Model):
 
+    Monday = 1
+    Tuesday = 2
+    Wednesday = 3
+    Thursday = 4
+    Friday = 5
+    Saturday = 6
+    Sunday = 7
     DAYS = [
-        (1, ("Monday")),
-        (2, ("Tuesday")),
-        (3, ("Wednesday")),
-        (4, ("Thursday")),
-        (5, ("Friday")),
-        (6, ("Saturday")),
-        (7, ("Sunday"))
+        (Monday, ("Monday")),
+        (Tuesday, ("Tuesday")),
+        (Wednesday, ("Wednesday")),
+        (Thursday, ("Thursday")),
+        (Friday, ("Friday")),
+        (Saturday, ("Saturday")),
+        (Sunday, ("Sunday"))
     ]
     shift_name = models.CharField(max_length=80, null=False, blank=False, default="first shift",
-                                  primary_key=True, validators=[validators.RegexValidator(
+                                  validators=[validators.RegexValidator(
             regex='^[a-zA-Z0-9 ]*$', message="Shift name must be alphanumeric", code="invalid shift name")])
     day_of_week = models.PositiveSmallIntegerField(choices=DAYS, default=1)
     start = models.TimeField(default=django.utils.timezone.now)
