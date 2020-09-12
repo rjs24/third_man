@@ -30,7 +30,7 @@ class PeopleTest(TestCase):
         self.director = Person.objects.create(userid=self.user_director, email="joebloggs@email.com", first_name="Joe",
                                               second_name="Bloggs", date_of_birth="1985-06-21", postcode="S1 9AA",
                                               address="29, Acacia Road, Nuttytown", organisation_role=self.role_director,
-                                              allowed_access=3, notes="likes pizza", line_manage="None")
+                                              allowed_access=3, notes="likes pizza", line_manage=self.top_role)
 
         self.manager = Person.objects.create(userid=self.user_manager, email="johnsmith@email.com", first_name="john",
                                               second_name="smith", date_of_birth="1977-01-03", postcode="LS1 0AA",
@@ -77,45 +77,39 @@ class PeopleTest(TestCase):
         self.assertIn(self.role_manager, self.role_director.responsible_4_roles.all())
         self.assertIn(self.role_employee, self.role_manager.responsible_4_roles.all())
 
-    def test_Role_has_CommsGroup(self):
-        """Test that Role has comms groups where applicable"""
-        self.role_director.associated_groups.add(self.comms_employee_grp)
-        self.role_director.associated_groups.add(self.comms_managers_only)
-        self.role_manager.associated_groups.add(self.comms_managers_only)
-        self.role_manager.associated_groups.add(self.comms_employee_grp)
-        self.role_employee.associated_groups.add(self.comms_employee_grp)
-        self.assertIn(self.comms_employee_grp, self.role_director.associated_groups.all())
-        self.assertIn(self.comms_managers_only, self.role_manager.associated_groups.all())
-
     def test_person_created_in_db_correctly(self):
         """Test that person creation includes info specified in setUp"""
         self.assertEqual(self.employee_b.email, "jackfrost@email.com")
         self.assertEqual(self.director.first_name, "Joe")
         self.assertEqual(self.manager.second_name, "smith")
         self.assertEqual(self.employee_b.address, "4, Brutalistblock avenue")
-        self.assertEqual(isinstance(self.employee_a.organisation_role, Role))
-        self.assertEqual(isinstance(self.manager.line_manage, Role))
+        self.assertTrue(isinstance(self.employee_a.organisation_role, Role))
+        self.assertTrue(isinstance(self.manager.line_manage, Role))
 
     def test_Staff_and_Volunteer_added_in_db(self):
         """Test that it is possible to add working hours to Staff and Volunteer"""
 
-        for n in range(1, 5):
-            wk_hrs = Working_Hrs(day_of_week=n, start=datetime.strptime("08:30", "%H:%M"),
+        for n in range(1, 6):
+            shift_name = "Day %s" % n
+            wk_hrs = Working_Hrs(shift_name=shift_name, day_of_week=n, start=datetime.strptime("08:30", "%H:%M"),
                                   end=datetime.strptime("17:00", "%H:%M"), duration=timedelta(hours=8))
             wk_hrs.save()
-            self.staff_a.add(wk_hrs)
-        for m in range(6, 7):
-            pt_wkhrs = Working_Hrs(day_of_week=m, start=datetime.strptime("08:30", "%H:%M"),
+            self.staff_a.hours.add(wk_hrs)
+            self.staff_a.save()
+        for m in range(6, 8):
+            shift_name = "Day %s" % m
+            pt_wkhrs = Working_Hrs(shift_name=shift_name, day_of_week=m, start=datetime.strptime("08:30", "%H:%M"),
                                   end=datetime.strptime("13:00", "%H:%M"), duration=timedelta(hours=4.5))
             pt_wkhrs.save()
-            self.volunteer_a.add(pt_wkhrs)
-        self.assertEqual(len(list(Volunteer.hours.all())), 2)
-        self.assertEqual(len(list(Staff.hours.all())), 5)
-        self.assertIn(Working_Hrs, Volunteer.hours.all())
-        self.assertIn(Working_Hrs, Staff.hours.all())
+            self.volunteer_a.hours.add(pt_wkhrs)
+            self.volunteer_a.save()
+        self.assertEqual(len(list(self.volunteer_a.hours.all())), 2)
+        self.assertEqual(len(list(self.staff_a.hours.all())), 5)
+        self.assertIn(pt_wkhrs, self.volunteer_a.hours.all())
+        self.assertIn(wk_hrs, self.staff_a.hours.all())
 
     def test_Staff_and_volunteer_detail(self):
         """Test if Staff and volunteer details are saved to db"""
         self.assertEqual(self.volunteer_a.staff_number, "DF549")
         self.assertEqual(self.staff_a.staff_number, "DF548")
-        self.assertEqual((self.staff_a.nat_insurance_num, "DF000000A"))
+        self.assertEqual(self.staff_a.nat_insurance_num, "DF000000A")
