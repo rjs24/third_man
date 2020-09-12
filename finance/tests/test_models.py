@@ -4,7 +4,7 @@ from people.models import Role, Person
 from ..models import Donation, Giftaid, Merchandise, Basket, Ticket
 from datetime import datetime, timedelta
 from django.contrib.auth.models import User
-
+import uuid
 
 class FinanceTest(TestCase):
     """Test ticket module"""
@@ -22,18 +22,21 @@ class FinanceTest(TestCase):
                                         second_name="bloggs", date_of_birth=datetime.strptime("1985-06-21", "%Y-%m-%d"),
                                         postcode="S1 9AA", address= "29, Acacia Road, Nuttytown", organisation_role=self.role,
                                         allowed_access=3, notes="likes pizza", line_manage=self.top_role)
-        self.event_a = Event.objects.create(title="summer fete",
-                                  start=datetime.strptime("2020-07-03 12:00", "%Y-%m-%d %H:%M"),
+        self.event_a = Event.objects.create(title="autumn fete",
+                                  start=datetime.strptime("2020-10-03 12:00", "%Y-%m-%d %H:%M"),
                                   end=datetime.strptime("2020-07-03 16:00", "%Y-%m-%d %H:%M"), event_owner=self.person_a,
                                   duration=timedelta(hours=4),
-                                  recurring=False, description="happy summer fete", website_publish=True)
+                                  recurrence_interval=1, description="happy autumn fete", website_publish=True)
         self.person_a.save()
         self.event_a.save()
-
-        self.couple_ticket = Ticket(event=self.event_a, price=12.0, ticket_type=1, ticket_quantity=2)
-        self.family_ticket = Ticket(event=self.event_a, price=30.5, ticket_type=3, ticket_quantity=1)
-        self.oap_ticket = Ticket(event=self.event_a, price=8.5, ticket_type=4, ticket_quantity=2)
-        self.student_ticket = Ticket(event=self.event_a, price=9.0, ticket_type=5, ticket_quantity=1)
+        self.couple_ticket = Ticket(ticket_number=uuid.uuid4(), event=self.event_a, price=12.0, ticket_type=1,
+                                    ticket_quantity=2)
+        self.family_ticket = Ticket(ticket_number=uuid.uuid4(),event=self.event_a, price=30.5, ticket_type=3,
+                                    ticket_quantity=1)
+        self.oap_ticket = Ticket(ticket_number=uuid.uuid4(), event=self.event_a, price=8.5, ticket_type=4,
+                                 ticket_quantity=2)
+        self.student_ticket = Ticket(ticket_number=uuid.uuid4(), event=self.event_a, price=9.0, ticket_type=5,
+                                     ticket_quantity=1)
         self.couple_ticket.save()
         self.family_ticket.save()
         self.oap_ticket.save()
@@ -98,9 +101,9 @@ class FinanceTest(TestCase):
         basket_collection.donation.add(self.donation1)
         basket_collection.merchandise.add(self.t_shirt)
         basket_collection.save()
-        self.assertIn(self.couple_ticket, basket_collection.ticket)
-        self.assertIn(self.donation1, basket_collection.donation)
-        self.assertIn(self.t_shirt, basket_collection.merchandise)
+        self.assertIn(self.couple_ticket, basket_collection.ticket.all())
+        self.assertIn(self.donation1, basket_collection.donation.all())
+        self.assertIn(self.t_shirt, basket_collection.merchandise.all())
 
     def test_check_total_cost_of_basket(self):
         """test if the calculated total cost method works"""
@@ -111,7 +114,8 @@ class FinanceTest(TestCase):
         basket_collection.merchandise.add(self.t_shirt)
         basket_collection.save()
         total = basket_collection.get_total_cost()
-        self.assertEqual(total, 44.8)
+        bask_items = basket_collection.list_basket_contents()
+        self.assertEqual(total, 32.8)
 
 
 

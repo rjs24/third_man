@@ -4,11 +4,12 @@ from django.core import validators
 from django.utils.html import format_html
 import django
 from django.utils.text import slugify
+import uuid
+import functools
 
 
 class Ticket(models.Model):
 
-    event = models.ForeignKey(Event, on_delete=models.CASCADE)
     SINGLE_ADULT = 1
     CHILD = 2
     FAMILY = 3
@@ -21,14 +22,15 @@ class Ticket(models.Model):
         (OAP, ('Over 65')),
         (STUDENT, ('Over 16, under 25 and in full time education'))
     )
-
+    ticket_number = models.UUIDField(auto_created=True, default=uuid.uuid4())
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=6, decimal_places=2)
     ticket_type = models.CharField(max_length=12, choices=TICKET_TYPES, default=1)
     ticket_quantity = models.IntegerField(default=1)
     slug = models.SlugField(unique=True, editable=False, max_length=80, default=None)
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.event.title)
+        self.slug = slugify(self.ticket_number)
         super(Ticket, self).save(*args, **kwargs)
 
     def __str__(self):
@@ -54,11 +56,11 @@ class Merchandise(models.Model):
     slug = models.SlugField(unique=True, editable=False, max_length=merchandise_name.max_length, default=None)
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.merchandise_name)
+        self.slug = slugify(self.stock_number)
         super(Merchandise, self).save(*args, **kwargs)
 
     def __str__(self):
-        return '{}, {}'.format(self.merchandise_name, self.stock_number)
+        return '{}'.format(self.stock_number)
 
     class Meta:
         ordering = ['merchandise_name']
@@ -130,16 +132,21 @@ class Basket(models.Model):
     donation = models.ManyToManyField(Donation)
     merchandise = models.ManyToManyField(Merchandise)
     paid = models.BooleanField(default=False)
-    total_cost = models.DecimalField(max_digits=6, decimal_places=2, default=00000)
+    total_cost = models.DecimalField(max_digits=6, decimal_places=2, default=00000, )
     slug = models.SlugField(unique=True, editable=False, max_length=basket_id.max_length, default=None)
     #todo integrate a payment gateway once basket working wel
 
-    def save(self, *args, **kwargs):
-        self.slug = slugify(self.basket_id)
-        super(Basket, self).save(*args, **kwargs)
-
     def list_basket_contents(self):
         """Return a list of items in basket"""
+        ret_str = ''
+        items = Basket.objects.get(basket_id=self.basket_id)
+        ret_str += '<ul> {} </ul> '.format(''.join([donations.slug for donations in items.donation.all()]))
+        ret_str += '<ul> {} </ul> '.format([merchandise.stock_number for merchandise in items.merchandise.all()])
+        ret_str += '<ul> {} </ul> '.format(''.join([str(ticket.ticket_number) for ticket in items.ticket.all()]))
+        return format_html(ret_str)
+
+    def list_all_baskets(self):
+        """Return all baskets"""
         ret_str = ''
         for items in Basket.objects.all():
             ret_str += '<ul> {} </ul> '.format(items)
@@ -148,14 +155,17 @@ class Basket(models.Model):
     def get_total_cost(self):
         """sum the total cost of items in the basket"""
         total_price = 0
-        if len(list(Basket.objects.all())) > 0:
-            for items in Basket.objects.all():
-                total_price += items.ticket.price
-                total_price += items.merchandise.price
-                total_price += items.donation.amount_2_donate
-            return total_price
-        else:
-            return total_price
+        items = Basket.objects.get(basket_id=self.basket_id)
+        total_price += sum([donations.amount_2_donate for donations in items.donation.all()])
+        total_price += sum([merchandise.price for merchandise in items.merchandise.all()])
+        total_price += sum([ticket.price for ticket in items.ticket.all()])
+        return float(total_price)
+
+    def save(self, *args, **kwargs):
+        if self.slug:
+            super(Basket, self).save(force_update=True)
+        self.slug = slugify(self.basket_id)
+        super(Basket, self).save(*args, **kwargs)
 
     def __str__(self):
         return '{}'.format(self.basket_id)

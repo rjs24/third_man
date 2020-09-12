@@ -35,7 +35,7 @@ class BasketAdmin(admin.ModelAdmin):
     list_display = ('basket_contents',)
 
     def basket_contents(self, obj):
-        return obj.list_basket_contents
+        return obj.list_all_baskets
 
 
 admin.site.register(Ticket, TicketAdmin)

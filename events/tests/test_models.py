@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from people.models import Person, Role
 from comms.models import CommsGroup
 from django.contrib.auth.models import User
-# from website.models import PublicEvent
+
 
 class EventTest(TestCase):
     """Test event module"""
@@ -87,20 +87,21 @@ class EventTest(TestCase):
         difference = end_time - start_time
         self.assertEqual(difference, self.event_a.duration)
 
-    def test_website_publish(self):
-        """test to see if website_publish=True passes data to publish on website in Website app"""
-        event = self.event_a
-        public_events = PublicEvent.objects.create(event=event, more_info_link='http://organisation.co.uk/tree_campaign',
-            ticket_link='http://organisation.co.uk/tickets', contact_number='00000000',
-            twitter_link='http://twitter.com/event', facebook_link='http://facebook.com/event',
-            linked_organisation='http://save_the_snails.co.uk')
-        self.assertTrue(isinstance(event, PublicEvent))
-        self.assertEqual(public_events.event.website_publish, True)
-        self.assertEqual(public_events.more_info_link, 'http://organisation.co.uk/tree_campaign')
-        if public_events:
-            assert True, "target_event published"
-        else:
-            assert False, "target_event not published"
+# to implement, probably using a cms
+    # def test_website_publish(self):
+    #     """test to see if website_publish=True passes data to publish on website in Website app"""
+    #     event = self.event_a
+    #     public_events = PublicEvent.objects.create(event=event, more_info_link='http://organisation.co.uk/tree_campaign',
+    #         ticket_link='http://organisation.co.uk/tickets', contact_number='00000000',
+    #         twitter_link='http://twitter.com/event', facebook_link='http://facebook.com/event',
+    #         linked_organisation='http://save_the_snails.co.uk')
+    #     self.assertTrue(isinstance(event, PublicEvent))
+    #     self.assertEqual(public_events.event.website_publish, True)
+    #     self.assertEqual(public_events.more_info_link, 'http://organisation.co.uk/tree_campaign')
+    #     if public_events:
+    #         assert True, "target_event published"
+    #     else:
+    #         assert False, "target_event not published"
 
     def test_add_invites_groups(self):
         """Testing if a group can add people/persons"""
