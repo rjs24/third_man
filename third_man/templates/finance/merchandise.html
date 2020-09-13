@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+<br>
+<div class="row justify-content-left">
+    <div class="col-auto"></div>
+    <div class="col-auto">
+        <a href="/finance/merchandise/create/" class="btn btn-primary" action="{% url 'get-merchandiseform' %}">Create Merchandise item</a>
+        <br>
+        <br>
+        {% csrf_token %}
+        <table class="table table-bordered table-hover">
+            <thead class="thead-light">
+                <tr>
+                    <th>Merchandise Name</th>
+                    <th>Stock Name</th>
+                    <th>Merchandise Description</th>
+                    <th>Price</th>
+                    <th>Merchandise Quantity</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in queryset %}
+                <tr>
+                    <td>
+                        <a href="/finance/merchandise/edit/{{row.slug}}">{{row.merchandise_name}}</a>
+                    </td>
+                    <td>
+                        {{row.stock_number}}
+                    </td>
+                    <td>
+                        {{row.merchandise_description}}
+                    </td>
+                    <td>
+                        {{row.price}}
+                    </td>
+                    <td>
+                        {{row.merchandise_quantity}}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

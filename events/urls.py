@@ -1,4 +1,3 @@
-from rest_framework.routers import DefaultRouter
 from .views import EventViewSet, CalendarView, EventsFormView, EventDeleteConfirmView
 from django.conf.urls import include, url
 from .api import router

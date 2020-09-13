@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+<br>
+<div class="row justify-content-left">
+    <div class="col-auto"></div>
+    <div class="col-auto">
+        <a href="/finance/donation/create/" class="btn btn-primary" action="{% url 'get-donationform' %}">Create Donation</a>
+        <br>
+        <br>
+        {% csrf_token %}
+        <table class="table table-bordered table-hover">
+            <thead class="thead-light">
+                <tr>
+                    <th>Campaign</th>
+                    <th>Target</th>
+                    <th>Amount to Donation</th>
+                    <th>Giftaid</th>
+                    <th>Giftaid Detail</th>
+                    <th>Donation Quantity</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in queryset %}
+                <tr>
+                    <td>
+                        <a href="/finance/donation/edit/{{row.slug}}">{{row.slug}}</a>
+                    </td>
+                    <td>
+                        {{row.target}}
+                    </td>
+                    <td>
+                        {{row.amount_2_donate}}
+                    </td>
+                    <td>
+                        {{row.giftaid}}
+                    </td>
+                    <td>
+                        {{row.giftaid_detail.name}}
+                    </td>
+                    <td>
+                        {{row.donation_quantity}}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+
+{% endblock %}

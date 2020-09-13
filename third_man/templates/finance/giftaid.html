@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block content %}
+<br>
+<div class="row justify-content-left">
+    <div class="col-auto"></div>
+    <div class="col-auto">
+        <a href="/finance/giftaid/create/" class="btn btn-primary" action="{% url 'get-giftaidform' %}">Create Giftaid application</a>
+        <br>
+        <br>
+        {% csrf_token %}
+        <table class="table table-bordered table-hover">
+            <thead class="thead-light">
+                <tr>
+                    <th>Name</th>
+                    <th>First Line of Address</th>
+                    <th>City</th>
+                    <th>Postcode</th>
+                    <th>Country</th>
+                    <th>Phone Number</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in queryset %}
+                <tr>
+                    <td>
+                        <a href="/finance/giftaid/edit/{{row.slug}}">{{row.name}}</a>
+                    </td>
+                    <td>
+                        {{row.first_line_address}}
+                    </td>
+                    <td>
+                        {{row.city}}
+                    </td>
+                    <td>
+                        {{row.postcode}}
+                    </td>
+                    <td>
+                        {{row.country}}
+                    </td>
+                    <td>
+                        {{row.phone_number}}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

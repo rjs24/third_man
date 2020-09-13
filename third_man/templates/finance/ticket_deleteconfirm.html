@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load rest_framework %}
+
+{% block content %}
+<br>
+<div class="row justify-content-center">
+    <div class="col-auto">
+        <div class="form-group">
+            <form method="POST" class="form-group">
+                {% csrf_token %}
+            <h2> Are you sure you want to delete {{item.first_name item.ticket_name}}?</h2>
+                <br>
+                <button type="submit" class="save btn btn-danger" name="action" value="delete" formaction="{% url 'ticket-delete' slug=slug %}">Delete</button>
+                <button type="submit" class="save btn btn-info" name="action" value="Back" formmethod="get" formaction="{% url 'ticket-list' %}">Back</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

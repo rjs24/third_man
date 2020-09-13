@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block content %}
+<br>
+<div class="row justify-content-left">
+    <div class="col-auto"></div>
+    <div class="col-auto">
+        <a href="/finance/basket/create/" class="btn btn-primary" action="{% url 'get-basketform' %}">Create new basket</a>
+        <br>
+        <br>
+        {% csrf_token %}
+        <table class="table table-bordered table-hover">
+            <thead class="thead-light">
+                <tr>
+                    <th>Basket id</th>
+                    <th>Date</th>
+                    <th>Tickets</th>
+                    <th>Donations</th>
+                    <th>Merchandise</th>
+                    <th>Paid</th>
+                    <th>Total cost</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in queryset %}
+                <tr>
+                    <td>
+                        <a href="/finance/basket/edit/{{row.slug}}">{{row.basket_id}}</a>
+                    </td>
+                    <td>
+                        {{row.date}}
+                    </td>
+                    <td>
+                        {{row.ticket}}
+                    </td>
+                    <td>
+                        {{row.donation}}
+                    </td>
+                    <td>
+                        {{row.merchandise}}
+                    </td>
+                    <td>
+                        {{row.paid}}
+                    </td>
+                    <td>
+                        {{row.total_cost}}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

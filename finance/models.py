@@ -5,7 +5,6 @@ from django.utils.html import format_html
 import django
 from django.utils.text import slugify
 import uuid
-import functools
 
 
 class Ticket(models.Model):
@@ -112,7 +111,7 @@ class Donation(models.Model):
             self.slug = slugify(slug_string)
             super(Donation, self).save(*args, **kwargs)
         else:
-            slug_string = self.campaign
+            slug_string = self.campaign + ' ' + django.utils.timezone.now
             self.slug = slugify(slug_string)
             super(Donation, self).save(*args, **kwargs)
 
