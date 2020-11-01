@@ -48,7 +48,8 @@ INSTALLED_APPS = [
     'drf_generators',
     'crispy_forms',
     'django_jenkins',
-    'django.contrib.admin'
+    'django.contrib.admin',
+    'corsheaders'
 ]
 
 MEDIA_URL = "/media/"
@@ -70,7 +71,8 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware'
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware'
 ]
 
 ROOT_URLCONF = 'third_man.urls'
@@ -100,6 +102,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'third_man.wsgi.application'
 
+CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_WHITELIST = (
+       'http://localhost:3000',
+)
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
